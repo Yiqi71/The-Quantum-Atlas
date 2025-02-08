@@ -1,0 +1,114 @@
+@media(max-width: 600px) {
+    body {
+        background-color: antiquewhite;
+    }
+
+    #panel1 {
+        /* border: black solid 1pt; */
+        position: absolute;
+    }
+
+    #panel2 {
+        /* border: black solid 1pt; */
+        position: absolute;
+        /* left: 4.5em;
+        top: 5.5em; */
+    }
+
+    #panel3 {
+        /* border: black solid 1pt; */
+        position: absolute;
+        /* left: 18em;
+        top: 2.5em; */
+    }
+
+    #panel4 {
+        /* border: black solid 1pt; */
+        position: absolute;
+        /* left: 7.8em;
+        top: 13.4em; */
+    }
+
+    #panel5 {
+        /* border: black solid 1pt; */
+        position: absolute;
+        /* left: 1em;
+        top: 15.5em; */
+    }
+
+    #panel6 {
+        /* border: black solid 1pt; */
+        position: absolute;
+        /* left: 15em;
+        top: 15.4em; */
+    }
+
+    #panel7 {
+        /* border: black solid 1pt; */
+        position: absolute;
+        /* left: 13.3em;
+        top: 23.5em; */
+    }
+
+    #panel8 {
+        /* border: black solid 1pt; */
+        position: absolute;
+        /* left: -3em;
+        top: 22.7em; */
+    }
+
+
+    #puzzle1 {
+        border: black solid 1pt;
+        width: 2em;
+        height: 2em;
+        transition: transform 1s ease-in-out;
+        position: absolute;
+        left: 18em;
+        top: 4em;
+        z-index: 10;
+    }
+
+    /* Container to limit the movement */
+    #container {
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+        position: absolute;
+
+        overflow: hidden;
+        left: 8.2em;
+        top: 17.8em;
+        transform: translate(-50%, -50%);
+    }
+
+    /* The moving circle */
+    #circle {
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border: 3px solid black;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+
+    }
+
+    #mirror {
+        z-index: 999;
+        /* Ensure it's on top */
+        position:absolute;
+    }
+
+}
