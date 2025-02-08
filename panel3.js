@@ -12,7 +12,7 @@ let circles = ["bigger_circle", "smaller_circle"];
 let circleTops = [0, 25];
 let circleLefts = [0, 30];
 let circleScaling = [0.70, 0.7];
-let zIndexs = [-10,-1];
+let zIndexs = [-10, -1];
 for (let i = 0; i < circles.length; i++) {
     let new_circle = document.createElement("img");
     new_circle.id = circles[i];
@@ -21,20 +21,21 @@ for (let i = 0; i < circles.length; i++) {
     new_circle.width *= scaling;
     new_circle.width *= circleScaling[i];
     new_circle.style.position = "absolute";
-    new_circle.style.left = circleLefts[i]+"px";
-    new_circle.style.top = circleTops[i]+"px";
+    new_circle.style.left = circleLefts[i] + "px";
+    new_circle.style.top = circleTops[i] + "px";
     // new_circle.style.zIndex = zIndexs[i];
-    
+
     circleContainer.appendChild(new_circle);
 }
 panel3.appendChild(circleContainer);
 let angle = 0;
+
 function rotateCircles() {
     angle += 0.4; // Adjust speed (degrees per frame)
-    
+
     document.getElementById("bigger_circle").style.transform = `rotate(${angle}deg)`;
     document.getElementById("smaller_circle").style.transform = `rotate(${angle}deg)`;
-    
+
     requestAnimationFrame(rotateCircles); // Keep rotating
 }
 
@@ -42,7 +43,7 @@ rotateCircles(); // Start the animation
 
 
 
-let pngNames = ["bg1", "bg2", "lockOutline","lockFill", "outline","atoms2","atoms1","atom2","atom1"];
+let pngNames = ["bg", "lockOutline", "lockFill", "outline", "atoms2", "atoms1", "atom2", "atom1"];
 
 
 for (let i = 0; i < pngNames.length; i++) {
@@ -92,7 +93,7 @@ for (let i = 0; i < pngNames.length; i++) {
 //     new_circle.style.position = "absolute";
 
 //     new_circle.style.zIndex = zIndexs[i];
-    
+
 //     circleContainer.appendChild(new_circle);
 // }
 // panel3.appendChild(circleContainer);
@@ -101,7 +102,7 @@ for (let i = 0; i < pngNames.length; i++) {
 // let angle = 0;
 // function rotateCircles() {
 //     angle += 0.4; // Adjust speed (degrees per frame)
-    
+
 //     // Get the elements
 //     let bigCircle = document.getElementById("bigCircle");
 //     let smallCircle = document.getElementById("smallCircle");
@@ -113,7 +114,7 @@ for (let i = 0; i < pngNames.length; i++) {
 //     // Apply the rotation transformation
 //     bigCircle.style.transform = `rotate(${angle}deg)`;
 //     smallCircle.style.transform = `rotate(${angle}deg)`;
-    
+
 //     requestAnimationFrame(rotateCircles); // Keep rotating
 // }
 

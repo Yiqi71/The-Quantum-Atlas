@@ -23,7 +23,7 @@ for (let i = 0; i < 8; i++) {
 
     // prepare finished panel pics
     panels[i] = document.createElement("img");
-    panels[i].src = `panelsImg/test_${i+1}.png`;
+    panels[i].alt = `panelsImg/test_${i+1}.png`;
     panels[i].width *= scaling;
 
 }
@@ -61,7 +61,7 @@ const containerWidth = container.clientWidth;
 const containerHeight = container.clientHeight;
 const circleSize = circle.clientWidth; // Assuming width = height
 let atom = document.createElement("img");
-atom.src = "panelsImg/color_3/atom.png";
+atom.src = "panelsImg/panel3/atom.png";
 atom.width *= scaling;
 atom.style.zIndex = "10";
 atom.style.position="absolute";
