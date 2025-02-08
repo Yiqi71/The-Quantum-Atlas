@@ -68,6 +68,7 @@ atom.style.position="absolute";
 container.appendChild(atom);
 atom.style.top="50px";
 atom.style.left="50px";
+
 atom.style.transform="translate(-50%, -50%)";
 function moveCircle() {
     let newX = (0.5 - Math.random()) * (containerWidth - circleSize) * 0.7;
