@@ -63,11 +63,20 @@ const container = document.getElementById("container");
 const containerWidth = container.clientWidth;
 const containerHeight = container.clientHeight;
 const circleSize = circle.clientWidth; // Assuming width = height
+let atom = document.createElement("img");
+atom.src = "panelsImg/color_3/atom.png";
+atom.width *= scaling;
+atom.style.zIndex = "10";
+atom.style.position="absolute";
+container.appendChild(atom);
+atom.style.top="50%";
+atom.style.left="50%";
+atom.style.transform="translate(-50%, -50%)";
 function moveCircle() {
     let newX = (0.5 - Math.random()) * (containerWidth - circleSize) * 0.7;
     let newY = (0.5 - Math.random()) * (containerHeight - circleSize) * 0.7;
-    circle.style.transition = "transform 0.8s linear"; // Smooth movement
-    circle.style.transform = `translate(${newX}px, ${newY}px)`;
+    atom.style.transition = "transform 0.8s linear"; // Smooth movement
+    atom.style.transform = `translate(${newX}px, ${newY}px)`;
 
 }
 // Move the circle every 2 seconds
