@@ -1,5 +1,7 @@
 // panel3
 let panel3 = document.getElementById(`panel3`);
+
+// moving circles
 let circleContainer = document.createElement("div");
 circleContainer.style.overflow = "hidden";
 circleContainer.style.border = "1pt solid black";
@@ -43,9 +45,10 @@ rotateCircles(); // Start the animation
 
 
 
+// others
+
 let pngNames = ["bg", "lockOutline", "lockFill", "outline", "atoms2", "atoms1", "atom2", "atom1"];
-
-
+let pngs = [];
 for (let i = 0; i < pngNames.length; i++) {
     let new_img = document.createElement("img");
     new_img.src = "panelsImg/panel3/" + pngNames[i] + ".png";
@@ -56,8 +59,25 @@ for (let i = 0; i < pngNames.length; i++) {
     new_img.style.top = "0";
     // new_img.height *= pngScaling;
     panel3.appendChild(new_img);
+    pngs[i] = new_img;
 }
 
+let locked = true;
+
+function updatePosition() {
+    if (locked) {
+        if (pngs[1]) pngs[1].style.transition = "top 0.3s ease";
+        if (pngs[2]) pngs[2].style.transition = "top 0.3s ease";
+
+        if (pngs[1]) pngs[1].style.top = "5px";
+        if (pngs[2]) pngs[2].style.top = "5px";
+    } else {
+        if (pngs[1]) pngs[1].style.top = "0px";
+        if (pngs[2]) pngs[2].style.top = "0px";
+    }
+}
+
+updatePosition();
 
 
 
