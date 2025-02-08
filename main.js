@@ -8,10 +8,7 @@
 
 let uPanels = [];
 let panels = [];
-let panelsWidth = [1845, 1224, 640, 1253, 1713, 914, 886, 983];
-let panelsHeight = [1548, 965, 867, 511, 1719, 934, 810, 1058];
-let panelsLeft = [0, 420, 2020, 780, 0, 1640, 1460, -450];
-let panelsTop = [0, 550, 220, 1500, 1750, 1740, 2690, 2670];
+
 let gapsScaling = 0.7;
 let wholePsLeft = 80;
 let wholePsTop = 50;
@@ -35,8 +32,8 @@ console.log(localStorage.getItem(`puzzle1Moved`));
 
 for (let i = 0; i < 8; i++) {
     let div = document.getElementById(`panel${i+1}`);
-    div.style.left = `${panelsLeft[i]* scaling*gapsScaling + wholePsLeft}px`;
-    div.style.top = `${panelsTop[i]* scaling* gapsScaling+wholePsTop}px`;
+    div.style.left = `0`;
+    div.style.top = `0`;
     if (localStorage.getItem(`p${i+1}Finished`) === "true") {
         if (localStorage.getItem(`puzzle1Moved`) == "false") {
             document.body.style.pointerEvents = "none";
@@ -63,11 +60,20 @@ const container = document.getElementById("container");
 const containerWidth = container.clientWidth;
 const containerHeight = container.clientHeight;
 const circleSize = circle.clientWidth; // Assuming width = height
+let atom = document.createElement("img");
+atom.src = "panelsImg/color_3/atom.png";
+atom.width *= scaling;
+atom.style.zIndex = "10";
+atom.style.position="absolute";
+container.appendChild(atom);
+atom.style.top="50px";
+atom.style.left="50px";
+atom.style.transform="translate(-50%, -50%)";
 function moveCircle() {
     let newX = (0.5 - Math.random()) * (containerWidth - circleSize) * 0.7;
     let newY = (0.5 - Math.random()) * (containerHeight - circleSize) * 0.7;
-    circle.style.transition = "transform 0.8s linear"; // Smooth movement
-    circle.style.transform = `translate(${newX}px, ${newY}px)`;
+    atom.style.transition = "transform 0.8s linear"; // Smooth movement
+    atom.style.transform = `translate(${newX}px, ${newY}px)`;
 
 }
 // Move the circle every 2 seconds
