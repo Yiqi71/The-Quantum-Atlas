@@ -20,15 +20,14 @@ for (let i = 0; i < 8; i++) {
     // prepare unfinished panel pics
     uPanels[i] = document.createElement("img");
     uPanels[i].src = `panelsImg/blank_${i+1}.png`;
-    uPanels[i].width = panelsWidth[i] * scaling;
-    uPanels[i].height = panelsHeight[i] * scaling;
+    uPanels[i].width *= scaling;
+    uPanels[i].style.position = "absolute";
+    uPanels[i].style.zIndex = "50";
 
     // prepare finished panel pics
     panels[i] = document.createElement("img");
     panels[i].src = `panelsImg/test_${i+1}.png`;
-    panels[i].width = panelsWidth[i];
-    panels[i].height = panelsHeight[i];
-    panels[i].style.position = "absolute";
+    panels[i].width *= scaling;
 
 }
 
@@ -54,7 +53,6 @@ for (let i = 0; i < 8; i++) {
     } else {
         // document.getElementById("panel1").style.backgroundColor = "grey";
         document.getElementById(`panel${i+1}`).appendChild(uPanels[i]);
-        console.log(`panel${i+1}`);
 
     }
 }
@@ -76,3 +74,6 @@ function moveCircle() {
 setTimeout(() => {
     setInterval(moveCircle, 200);
 }, 500);
+
+
+
