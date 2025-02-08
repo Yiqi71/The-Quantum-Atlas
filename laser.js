@@ -207,7 +207,7 @@ canvas.addEventListener("mouseup", () => {
 
 
 document.addEventListener("mousemove", (event) => {
-    // console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
+    console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
 });
 
 
