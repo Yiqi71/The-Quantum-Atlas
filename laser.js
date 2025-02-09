@@ -247,5 +247,9 @@ document.addEventListener("mousemove", (event) => {
 
 
 // Initial render
-update();
+let laserOn = localStorage.getItem("laserOn");
+if (laserOn == "true"){
+    update();
+}
+
 
