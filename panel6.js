@@ -4,7 +4,6 @@ import { loadPngs } from './main.js';
 
 let p6Names = ["passive", "active1", "active2", "shade", "face"];
 let p6Pngs = [];
-
 loadPngs(document.getElementById("panel6"),`panelsImg/panel6/`, p6Names, p6Pngs);
 p6Pngs[4].style.zIndex = -1;
 let cameraStage = "off";
@@ -20,6 +19,7 @@ function checkCamera() {
         }
 
     } else {
+        
         let activeIndex = 0; // 控制切换
         let intervalTime = 500; // 交替时间（毫秒）
 
@@ -28,6 +28,7 @@ function checkCamera() {
         }
         cameraInterval = setInterval(() => {
             if (p6Pngs[1] && p6Pngs[2]) {
+                p6Pngs[0].style.display = "none";
                 if (activeIndex === 0) {
                     p6Pngs[1].style.display = "block";
                     p6Pngs[2].style.display = "none";

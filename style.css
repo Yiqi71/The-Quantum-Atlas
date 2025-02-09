@@ -50,9 +50,9 @@ table {
 
 /* below */
 
-@media(max-width: 600px) {
+@media(max-width: 800px) {
     body {
-        /* background-color: antiquewhite; */
+        background-color: #ffefe2;
     }
 
     img{

@@ -6,9 +6,9 @@ import {
 } from './main.js';
 
 let panel4 = document.getElementById("panel4");
-let p4PngNames = ["bg", "atom3", "atom2", "atom1"];
+let p4PngNames = ["lasers", "bg2","bg1","active2", "active1","red"];
 let p4Pngs = [];
-
+loadPngs(panel4, "panelsImg/panel4/", p4PngNames, p4Pngs);
 
 // the moving atom
 const circle = document.getElementById("circle");

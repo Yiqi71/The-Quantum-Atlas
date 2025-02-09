@@ -8,7 +8,7 @@ import {
 
 // panel3
 let panel3 = document.getElementById(`panel3`);
-
+// NOTE: change the size and position of smaller circle
 // moving circles
 let circleContainer = document.createElement("div");
 circleContainer.style.overflow = "hidden";
@@ -40,26 +40,28 @@ for (let i = 0; i < circles.length; i++) {
 panel3.appendChild(circleContainer);
 
 let angle = 0;
-function rotateCircles() {
-    angle += 0.4; // Adjust speed (degrees per frame)
+let speedMax = 0.4
+let speed = 0;
 
+function rotateCircles() {
+    if (speed < speedMax) {
+        speed += 0.002;
+    }
+    angle += speed;
     document.getElementById("bigger_circle").style.transform = `rotate(${angle}deg)`;
     document.getElementById("smaller_circle").style.transform = `rotate(-${angle}deg)`;
     requestAnimationFrame(rotateCircles); // Keep rotating
 }
-
-
 
 // others
 let p3PngNames = ["bg", "lockFill", "lockOutline", "outline", "atoms2", "atoms1", "atom2", "atom1"];
 let p3Pngs = [];
 loadPngs(document.getElementById("panel3"), "panelsImg/panel3/", p3PngNames, p3Pngs);
 p3Pngs[0].style.zIndex = -1;
+p3Pngs[4].style.mixBlendMode = "lighten";
 
 // lock animation
-let locked = false;
-
-
+export let locked = false;
 if (locked == false) {
     setTimeout(() => {
         p3Pngs[1].style.transform = "translateY(10px)";
@@ -67,8 +69,8 @@ if (locked == false) {
         p3Pngs[2].style.transform = "translateY(10px)";
         p3Pngs[2].style.transition = "transform 1.5s ease-in-out";
     }, 500);
-    rotateCircles(); // Start the animation
-    locked = true
+    rotateCircles();
+    locked = true;
 } else {
     p3Pngs[2].style.top = "0";
     p3Pngs[1].style.top = "0";
