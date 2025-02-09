@@ -52,7 +52,7 @@ table {
 
 @media(max-width: 600px) {
     body {
-        background-color: antiquewhite;
+        /* background-color: antiquewhite; */
     }
 
     img{
@@ -116,30 +116,24 @@ table {
         z-index: 10;
     }
 
-    /* Container to limit the movement */
-    #container {
+    /* #container {
         width: 50px;
         height: 50px;
         border: 1px solid black;
         position: absolute;
-/* 
-        overflow: hidden; */
+
         left: 8.2em;
         top: 17.8em;
         transform: translate(-50%, -50%);
     }
+*/
 
-    /* The moving circle */
     #circle {
         width: 10px;
         height: 10px;
-        /* border:1px solid red; */
         border-radius: 50%;
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+    } 
 
     canvas {
         position: absolute;

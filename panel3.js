@@ -1,4 +1,11 @@
+import { scaling } from './main.js';
+import { loadPngs } from './main.js';
+
+
 // panel3
+
+
+
 let panel3 = document.getElementById(`panel3`);
 
 // moving circles
@@ -30,8 +37,8 @@ for (let i = 0; i < circles.length; i++) {
     circleContainer.appendChild(new_circle);
 }
 panel3.appendChild(circleContainer);
-let angle = 0;
 
+let angle = 0;
 function rotateCircles() {
     angle += 0.4; // Adjust speed (degrees per frame)
 

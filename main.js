@@ -11,7 +11,7 @@ let panels = [];
 
 let wholePsLeft = 80;
 let wholePsTop = 50;
-let scaling = 0.19;
+export let scaling = 0.19;
 for (let i = 0; i < 8; i++) {
     // prepare unfinished panel pics
     uPanels[i] = document.createElement("img");
@@ -53,44 +53,18 @@ for (let i = 0; i < 8; i++) {
     }
 }
 
-// the moving atom
-const circle = document.getElementById("circle");
-const container = document.getElementById("container");
-const containerWidth = container.clientWidth;
-const containerHeight = container.clientHeight;
-const circleSize = circle.clientWidth; // Assuming width = height
-let atom = document.createElement("img");
-atom.src = "panelsImg/panel3/atom.png";
-atom.width *= scaling;
-atom.style.zIndex = "10";
-atom.style.position="absolute";
-container.appendChild(atom);
-atom.style.top="50px";
-atom.style.left="50px";
-
-atom.style.transform="translate(-50%, -50%)";
-function moveCircle() {
-    let newX = (0.5 - Math.random()) * (containerWidth - circleSize) * 0.7;
-    let newY = (0.5 - Math.random()) * (containerHeight - circleSize) * 0.7;
-    atom.style.transition = "transform 0.8s linear"; // Smooth movement
-    atom.style.transform = `translate(${newX}px, ${newY}px)`;
-
-}
-// Move the circle every 2 seconds
-setTimeout(() => {
-    setInterval(moveCircle, 200);
-}, 500);
 
 
 
-function loadPngs(div,fileName, names, pngs){
+export function loadPngs(div,fileName, names, pngs){
     for (let i = 0; i < names.length; i++) {
         let new_img = document.createElement("img");
         new_img.src = fileName + names[i] + ".png";
         new_img.alt = fileName + names[i] + ".png";
         new_img.width *= scaling;
         // new_img.height *= pngScaling;
-        div.appendChild(new_img);
         pngs[i] = new_img;
+        div.appendChild(pngs[i]);
+        
     }
 }

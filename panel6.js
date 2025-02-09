@@ -1,3 +1,6 @@
+import { scaling } from './main.js';
+import { loadPngs } from './main.js';
+
 
 let p6Names = ["passive", "active1", "active2", "shade", "face"];
 let p6Pngs = [];
