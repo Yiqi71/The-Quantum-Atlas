@@ -6,6 +6,14 @@
 // localStorage.setItem("p5Finished", "false");
 // localStorage.setItem("puzzle1Moved","false");
 
+// noise
+let noise = document.createElement("img");
+noise.src = "panelsImg/Noise.png";
+noise.style.zIndex = -10;
+document.body.appendChild(noise);
+
+
+//prepare panels
 let uPanels = [];
 let panels = [];
 

@@ -6,7 +6,7 @@ import {
 } from './main.js';
 
 let panel4 = document.getElementById("panel4");
-let p4PngNames = ["lasers", "bg2","bg1","active2", "active1","red"];
+let p4PngNames = ["lasers", "bg2", "bg1", "active2", "active1", "red"];
 let p4Pngs = [];
 loadPngs(panel4, "panelsImg/panel4/", p4PngNames, p4Pngs);
 
@@ -23,10 +23,17 @@ function moveCircle() {
     circle.style.transform = `translate(${newX}px, ${newY}px)`;
 
 }
-// Move the circle every 2 seconds
-setTimeout(() => {
-    setInterval(moveCircle, 200);
-}, 500);
+
+
+let motIsOn = false;
+if (motIsOn) {
+    //smoothly, gradually stay at left0 top0
+} else {
+    setTimeout(() => {
+        setInterval(moveCircle, 400);
+    }, 600);
+}
+
 
 let angle = 0;
 
