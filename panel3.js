@@ -8,7 +8,7 @@ import {
 
 // panel3
 let panel3 = document.getElementById(`panel3`);
-// NOTE: change the size and position of smaller circle
+
 // moving circles
 let circleContainer = document.createElement("div");
 circleContainer.style.overflow = "hidden";
@@ -40,7 +40,7 @@ for (let i = 0; i < circles.length; i++) {
 panel3.appendChild(circleContainer);
 
 let angle = 0;
-let speedMax = 0.4
+let speedMax = 0.5
 let speed = 0;
 
 function rotateCircles() {
@@ -59,19 +59,61 @@ let p3Pngs = [];
 loadPngs(document.getElementById("panel3"), "panelsImg/panel3/", p3PngNames, p3Pngs);
 p3Pngs[0].style.zIndex = -1;
 p3Pngs[4].style.mixBlendMode = "lighten";
+p3Pngs[6].style.mixBlendMode = "lighten";
 
 // lock animation
-export let locked = false;
-if (locked == false) {
-    setTimeout(() => {
-        p3Pngs[1].style.transform = "translateY(10px)";
-        p3Pngs[1].style.transition = "transform 1.5s ease-in-out";
-        p3Pngs[2].style.transform = "translateY(10px)";
-        p3Pngs[2].style.transition = "transform 1.5s ease-in-out";
-    }, 500);
-    rotateCircles();
-    locked = true;
+let atomDX = -23;
+let atomDY = -26;
+let lockStart = true;
+let locked = false;
+if (lockStart == true) {
+    console.log("lockStart");
+    if (locked == false) {
+        setTimeout(() => {
+            p3Pngs[6].style.transition = "transform 3s ease-in-out"; // Adjust the speed as needed
+            p3Pngs[6].style.transform = `translate(${atomDX}px, ${atomDY}px)`; // Apply the translation
+            p3Pngs[7].style.transition = "transform 3s ease-in-out"; // Adjust the speed as needed
+            p3Pngs[7].style.transform = `translate(${atomDX}px, ${atomDY}px)`; // Apply the translation
+        }, 500);
+        setTimeout(() => {
+            p3Pngs[1].style.transform = "translateY(10px)";
+            p3Pngs[1].style.transition = "transform 1.5s ease-in-out";
+            p3Pngs[2].style.transform = "translateY(10px)";
+            p3Pngs[2].style.transition = "transform 1.5s ease-in-out";
+
+        }, 7000);
+        setTimeout(() => {
+            locked = true;
+            rotateCircles();
+        }, 2500);
+
+    }
 } else {
     p3Pngs[2].style.top = "0";
     p3Pngs[1].style.top = "0";
+    console.log("not start");
+}
+
+
+let p8PngNames = ["bg2", "bg1", "circle1", "circle1_border", "circle2", "atoms2", "atoms1", "entangled"];
+let p8Pngs = [];
+loadPngs(document.getElementById("panel8"), "panelsImg/panel8/", p8PngNames, p8Pngs);
+p8Pngs[4].style.transformOrigin = "23px 565px";
+p8Pngs[4].style.transform = "scale(0.5)";
+p8Pngs[7].style.zIndex = 40;
+
+if(locked == false){
+    p8Pngs[7].style.opacity = "0"; 
+}
+if (lockStart) {
+    setTimeout(() => {
+        p8Pngs[4].style.transition = "transform 4s ease-in-out";
+        p8Pngs[4].style.transform = "scale(1)";
+    }, 2000);
+    setTimeout(() => {
+    if (locked === true) {
+        p8Pngs[7].style.transition = "opacity 0.8s ease-in-out";
+        p8Pngs[7].style.opacity = "1"; 
+        console.log("locked");
+    }}, 9500);
 }

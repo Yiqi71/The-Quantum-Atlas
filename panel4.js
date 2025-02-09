@@ -24,10 +24,23 @@ function moveCircle() {
 
 }
 
+function slowCircle() {
+    let x = parseFloat(circle.style.left) || 0;
+    let y = parseFloat(circle.style.top) || 0;
+    x = (0.5 - Math.random()) * x;
+    y = (0.5 - Math.random()) * y;
+    circle.style.transition = "transform 0.8s linear"; // Smooth movement
+    circle.style.transform = `translate(${x}px, ${y}px)`;
+}
 
 let motIsOn = false;
+
 if (motIsOn) {
     //smoothly, gradually stay at left0 top0
+    setTimeout(() => {
+        setInterval(slowCircle, 400);
+        console.log("slowing");
+    }, 600);
 } else {
     setTimeout(() => {
         setInterval(moveCircle, 400);

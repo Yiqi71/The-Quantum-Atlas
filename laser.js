@@ -5,8 +5,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let laserSource = {
-    x: 165,
-    y: 110
+    x: 175,
+    y: 100
 };
 let mirror = {
     x: 250,
