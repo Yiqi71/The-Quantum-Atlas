@@ -9,7 +9,6 @@
 let uPanels = [];
 let panels = [];
 
-let gapsScaling = 0.7;
 let wholePsLeft = 80;
 let wholePsTop = 50;
 let scaling = 0.19;
@@ -84,3 +83,17 @@ setTimeout(() => {
 
 
 
+function loadPngs(fileName, names, pngs){
+    for (let i = 0; i < names.length; i++) {
+        let new_img = document.createElement("img");
+        new_img.src = fileName + names[i] + ".png";
+        new_img.alt = fileName + names[i] + ".png";
+        new_img.width *= scaling;
+        new_img.style.position = "absolute";
+        new_img.style.left = "0";
+        new_img.style.top = "0";
+        // new_img.height *= pngScaling;
+        panel3.appendChild(new_img);
+        pngs[i] = new_img;
+    }
+}

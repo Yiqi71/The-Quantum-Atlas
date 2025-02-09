@@ -12,15 +12,15 @@ let mirror = {
     x: 250,
     y: 200,
     r: 50,
-    angle: 45,
+    angle: 30,
     adjustX: 0,
-    adjustY: 0
+    adjustY: 20
 };
 let deflector = {
-    x1: 450,
-    y1: 510,
-    x2: 4000,
-    y2: 520
+    x1: 300,
+    y1: 110,
+    x2: 100,
+    y2: 180
 };
 
 let inputAngle = Math.atan2(mirror.y-laserSource.y, mirror.x-laserSource.x) * (180 / Math.PI);
