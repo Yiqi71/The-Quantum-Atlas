@@ -55,6 +55,11 @@ table {
         background-color: antiquewhite;
     }
 
+    img{
+        position:absolute;
+        top:0;
+        left:0;
+    }
     #panel1 {
         /* border: black solid 1pt; */
         position: absolute;
@@ -77,36 +82,26 @@ table {
     #panel4 {
         /* border: black solid 1pt; */
         position: absolute;
-        /* left: 7.8em;
-        top: 13.4em; */
     }
 
     #panel5 {
         /* border: black solid 1pt; */
         position: absolute;
-        /* left: 1em;
-        top: 15.5em; */
     }
 
     #panel6 {
         /* border: black solid 1pt; */
         position: absolute;
-        /* left: 15em;
-        top: 15.4em; */
     }
 
     #panel7 {
         /* border: black solid 1pt; */
         position: absolute;
-        /* left: 13.3em;
-        top: 23.5em; */
     }
 
     #panel8 {
         /* border: black solid 1pt; */
         position: absolute;
-        /* left: -3em;
-        top: 22.7em; */
     }
 
 

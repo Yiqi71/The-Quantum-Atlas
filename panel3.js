@@ -49,7 +49,7 @@ rotateCircles(); // Start the animation
 
 let p3PngNames = ["bg", "lockFill", "lockOutline", "outline", "atoms2", "atoms1", "atom2", "atom1"];
 let p3Pngs = [];
-loadPngs("panelsImg/panel3/", p3PngNames, p3Pngs);
+loadPngs(document.getElementById("panel3"),"panelsImg/panel3/", p3PngNames, p3Pngs);
 // for (let i = 0; i < pngNames.length; i++) {
 //     let new_img = document.createElement("img");
 //     new_img.src = "panelsImg/panel3/" + pngNames[i] + ".png";

@@ -1,28 +1,9 @@
-let face = document.createElement("img");
-face.src = `panelsImg/panel6/export as.png`;
-face.width *= scaling;
-face.style.position = "absolute";
-face.style.left = "0";
-face.style.top = "0";
 
-let names = ["passive", "active1", "active2", "shade"];
+let p6Names = ["passive", "active1", "active2", "shade", "face"];
 let p6Pngs = [];
-for (let i = 0; i < 4; i++) {
-    let face = document.createElement("img");
 
-    face.src = `panelsImg/panel6/${names[i]}.png`;
-    face.width *= scaling;
-    face.style.position = "absolute";
-    face.style.left = "0";
-    face.style.top = "0";
-    face.style.zIndex = i;
-    face.style.display = "none";
-    p6Pngs[i] = face;
-    document.body.appendChild(p6Pngs[i]);
-}
-p6Pngs[3].style.zIndex = 10;
-document.body.appendChild(face);
-
+loadPngs(document.getElementById("panel6"),`panelsImg/panel6/`, p6Names, p6Pngs);
+p6Pngs[4].style.zIndex = -1;
 let cameraStage = "off";
 let cameraInterval = null;
 function checkCamera() {
