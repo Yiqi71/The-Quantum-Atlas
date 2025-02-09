@@ -6,7 +6,7 @@ import {
 } from './main.js';
 
 let panel4 = document.getElementById("panel4");
-let p4PngNames = ["lasers", "bg2", "bg1", "active2", "active1", "red"];
+let p4PngNames = ["lasers", "bg2", "bg1", "red", "active2", "active1"];
 let p4Pngs = [];
 loadPngs(panel4, "panelsImg/panel4/", p4PngNames, p4Pngs);
 

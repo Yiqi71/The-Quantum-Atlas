@@ -46,7 +46,7 @@ checkCamera();
 // click to turn on camera
 p6Pngs[3].style.display = "block";
 let camera = document.createElement("div");
-camera.style.border = "1px solid black";
+// camera.style.border = "1px solid black";
 camera.style.position = "absolute";
 camera.style.width = "80px";
 camera.style.height = "80px";

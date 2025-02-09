@@ -4,28 +4,38 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let laserSource = {
-    x: 175,
-    y: 100
+let red1Source = {
+    x: 178,
+    y: 88
 };
-let mirror = {
-    x: 250,
-    y: 200,
-    r: 50,
-    angle: 30,
+//angle: 55
+let mirror2 = {
+    x: 203,
+    y: 108,
+    r: 40,
+    angle: 20,
     adjustX: 0,
     adjustY: 20
 };
-let deflector = {
-    x1: 300,
-    y1: 110,
-    x2: 100,
-    y2: 180
+
+let mirror1 = {
+    x: 179,
+    y: 89,
+    r: 50,
+    angle: 40,
+    adjustX: 0,
+    adjustY: 20
 };
 
-let inputAngle = Math.atan2(mirror.y-laserSource.y, mirror.x-laserSource.x) * (180 / Math.PI);
+let deflector = {
+    x1: 300,
+    y1: 125,
+    x2: 200,
+    y2: 140
+};
 
-console.log(inputAngle);
+let inputAngle = Math.atan2(mirror2.y - red1Source.y, mirror2.x - red1Source.x) * (180 / Math.PI) + 55;
+let inputAngle1 = Math.atan2(mirror1.y - red1Source.y, mirror1.x - red1Source.x) * (180 / Math.PI);
 let isDragging = false;
 
 // Function to draw the laser beam
@@ -38,21 +48,21 @@ function drawLaser(x1, y1, x2, y2, color = "red") {
     ctx.stroke();
 }
 
-// Function to draw the mirror
+// Function to draw the mirror1
 function drawMirror() {
     ctx.strokeStyle = "white";
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 7;
 
-    let mirrorX2 = mirror.x + mirror.r * Math.cos(mirror.angle * (Math.PI / 180));
-    // console.log(mirrorX2);
-    let mirrorY2 = mirror.y + mirror.r * Math.sin(mirror.angle * (Math.PI / 180));
+    let mirror2X2 = mirror2.x + (mirror2.r-20) * Math.cos(mirror2.angle * (Math.PI / 180));
+    // console.log(mirror2X2);
+    let mirror2Y2 = mirror2.y + (mirror2.r-20) * Math.sin(mirror2.angle * (Math.PI / 180));
 
     ctx.beginPath();
     ctx.moveTo(
-        mirror.x - mirror.r * Math.cos(mirror.angle * (Math.PI / 180)),
-        mirror.y - mirror.r * Math.sin(mirror.angle * (Math.PI / 180))
+        mirror2.x - (mirror2.r-20) * Math.cos(mirror2.angle * (Math.PI / 180)),
+        mirror2.y - (mirror2.r-20)* Math.sin(mirror2.angle * (Math.PI / 180))
     );
-    ctx.lineTo(mirrorX2, mirrorY2);
+    ctx.lineTo(mirror2X2, mirror2Y2);
     ctx.stroke();
 
 }
@@ -90,15 +100,15 @@ function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
     return null; // No intersection within bounds
 }
 
-// Reflect the laser on the mirror
+// Reflect the laser on the mirror2
 function reflectLaser(x1, y1, angle) {
-    let incidentAngle = mirror.angle;
+    let incidentAngle = mirror2.angle;
     let reflectionAngle = 2 * incidentAngle - angle;
 
     let x2 = x1 + 500 * Math.cos(reflectionAngle * (Math.PI / 180));
     let y2 = y1 + 500 * Math.sin(reflectionAngle * (Math.PI / 180));
 
-    drawLaser(mirror.x, mirror.y, x2, y2, "yellow");
+    drawLaser(mirror2.x, mirror2.y, x2, y2, "blue");
     return {
         x: x2,
         y: y2,
@@ -127,37 +137,56 @@ function isLaserIntersectingDeflector(x1, y1, x2, y2) {
 
 // Split the laser into multiple beams at the deflector
 function deflectLaser(x, y, angle) {
+    let r = 150;
     let beams = [{
-            x: x + 400 * Math.cos((angle - 20) * (Math.PI / 180)),
-            y: y + 400 * Math.sin((angle - 20) * (Math.PI / 180))
+            x: x + (r - 5) * Math.cos((angle + 77) * (Math.PI / 180)),
+            y: y + (r - 5) * Math.sin((angle + 77) * (Math.PI / 180))
         },
         {
-            x: x + 400 * Math.cos(angle * (Math.PI / 180)),
-            y: y + 400 * Math.sin(angle * (Math.PI / 180))
+            x: x + r * Math.cos((angle + 70) * (Math.PI / 180)),
+            y: y + r * Math.sin((angle + 70) * (Math.PI / 180))
         },
         {
-            x: x + 400 * Math.cos((angle + 20) * (Math.PI / 180)),
-            y: y + 400 * Math.sin((angle + 20) * (Math.PI / 180))
+            x: x + r * Math.cos((angle + 60) * (Math.PI / 180)),
+            y: y + r * Math.sin((angle + 60) * (Math.PI / 180))
+        },
+        {
+            x: x + r * Math.cos((angle + 50) * (Math.PI / 180)),
+            y: y + r * Math.sin((angle + 50) * (Math.PI / 180))
+        },
+        {
+            x: x + r * Math.cos((angle + 40) * (Math.PI / 180)),
+            y: y + r * Math.sin((angle + 40) * (Math.PI / 180))
+        },
+        {
+            x: x + r * Math.cos((angle + 30) * (Math.PI / 180)),
+            y: y + r * Math.sin((angle + 30) * (Math.PI / 180))
+        },
+        {
+            x: x + (r + 15) * Math.cos((angle + 20) * (Math.PI / 180)),
+            y: y + (r + 15) * Math.sin((angle + 20) * (Math.PI / 180))
         }
     ];
 
-    beams.forEach((beam) => drawLaser(x, y, beam.x, beam.y, "cyan"));
+    beams.forEach((beam) => drawLaser(x + 18, y, beam.x, beam.y, "red"));
 }
 
 // Update function to redraw everything
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawMirror();
-    drawDeflector();
+    // drawDeflector();
 
     // Draw initial laser
-    drawLaser(laserSource.x, laserSource.y, mirror.x, mirror.y);
+    //drawLaser(red1Source.x, red1Source.y, mirror1.x, mirror1.y);
+    drawLaser(red1Source.x, red1Source.y, mirror2.x, mirror2.y, "red");
 
-    // Reflect the laser at the mirror
-    let reflected = reflectLaser(mirror.x, mirror.y, inputAngle);
+    // Reflect the laser at the mirror1
+    let reflected = reflectLaser(mirror2.x, mirror2.y, inputAngle);
+    let reflected1 = reflectLaser(mirror1.x, mirror1.y, inputAngle1);
 
     // Check if the reflected laser intersects the deflector
-    let intersection = getIntersection(mirror.x, mirror.y, reflected.x, reflected.y, deflector.x1, deflector.y1, deflector.x2, deflector.y2);
+    let intersection = getIntersection(mirror1.x, mirror1.y, reflected1.x, reflected1.y, deflector.x1, deflector.y1, deflector.x2, deflector.y2);
 
     if (intersection) {
         // If intersection is found, deflect laser at that point
@@ -169,11 +198,11 @@ let initialAngle = 0;
 let mouseIsDown = false;
 // Drag-to-Rotate functionality
 canvas.addEventListener("mousedown", (event) => {
-    let dx = event.clientX - mirror.x + mirror.adjustX;
-    let dy = event.clientY - mirror.y + mirror.adjustY;
+    let dx = event.clientX - mirror2.x + mirror2.adjustX;
+    let dy = event.clientY - mirror2.y + mirror2.adjustY;
 
 
-    // If mouse is close to the mirror, start dragging to rotate
+    // If mouse is close to the mirror1, start dragging to rotate
     if (Math.sqrt(dx * dx + dy * dy) < 80) {
         isDragging = true;
 
@@ -182,19 +211,20 @@ canvas.addEventListener("mousedown", (event) => {
 
     }
 });
+localStorage.setItem("hitted", "false");
 
 canvas.addEventListener("mousemove", (event) => {
     if (isDragging) {
-        // Calculate the angle between mirror and mouse position
-        let dx = event.clientX - mirror.x + mirror.adjustX;
-        let dy = event.clientY - mirror.y + mirror.adjustY;
+        // Calculate the angle between mirror1 and mouse position
+        let dx = event.clientX - mirror2.x + mirror2.adjustX;
+        let dy = event.clientY - mirror2.y + mirror2.adjustY;
         console.log(dx, dy);
 
         let currentAngle = Math.atan2(dy, dx) * (180 / Math.PI);
         // console.log(currentAngle, initialAngle);
 
-        mirror.angle = currentAngle;
-        // mirror.angle += currentAngle - initialAngle;
+        mirror2.angle = currentAngle;
+        // mirror2.angle += currentAngle - initialAngle;
         update();
         initialAngle = currentAngle;
     }
@@ -203,6 +233,11 @@ canvas.addEventListener("mousemove", (event) => {
 canvas.addEventListener("mouseup", () => {
     isDragging = false;
     mouseIsDown = false;
+    console.log(mirror2.angle);
+    if (mirror2.angle > 52 && mirror2.angle < 57) {
+    localStorage.setItem("hitted", "true");
+    console.log("hitted");
+}
 });
 
 
@@ -213,3 +248,4 @@ document.addEventListener("mousemove", (event) => {
 
 // Initial render
 update();
+
