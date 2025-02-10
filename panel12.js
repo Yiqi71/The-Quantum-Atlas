@@ -23,36 +23,29 @@ button.style.top = "50px";
 let laserOn = false;
 let cameraInterval = null;
 button.addEventListener("click", () => {
+    if (cameraInterval) return; // Prevent multiple intervals
+
     laserOn = true;
-    let activeIndex = 0; // 控制切换
-    let intervalTime = 500; // 交替时间（毫秒）
+    const intervalTime = 600; // Toggle interval (ms)
+    let active = false;
 
-    if (cameraInterval) {
-        clearInterval(cameraInterval);
-    }
+    if (!p1Pngs[4] || !p1Pngs[5]) return; // Ensure required elements exist
+
+    toggleVisibility(p1Pngs[6], false); // Hide passive button
+    toggleVisibility(p1Pngs[7], true);  // Show active button
+
     cameraInterval = setInterval(() => {
-        if (p1Pngs[4] && p1Pngs[5]) {
-            p1Pngs[6].style.opacity = "0";
-            p1Pngs[7].style.opacity = "1";
-            if (activeIndex === 0) {
-                p1Pngs[4].style.opacity = "1";
-                p1Pngs[5].style.opacity = "0";
-            } else {
-                p1Pngs[4].style.opacity = "0";
-                p1Pngs[5].style.opacity = "1";
-            }
-            activeIndex = 1 - activeIndex; // 在 0 和 1 之间切换
-            setInterval(() => {
-                    update();
-                },
-                intervalTime);
-        }
+        active = !active;
+        toggleVisibility(p1Pngs[4], active);
+        toggleVisibility(p1Pngs[5], !active);
+        update();
     }, intervalTime);
+});
 
-
-
-})
-
+/** Helper function for setting element visibility **/
+function toggleVisibility(element, isVisible) {
+    if (element) element.style.opacity = isVisible ? "1" : "0";
+}
 
 
 
@@ -62,11 +55,8 @@ let p2PngNames = ["bg5", "bg4", "bg3", "bg2", "bg1"];
 let p2Pngs = [];
 
 loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2Pngs);
-// p2Pngs[1].style.mixBlendMode = "lighten";
 p2Pngs[2].style.mixBlendMode = "multiply";
-// p2Pngs[3].style.mixBlendMode = "darken";
 console.log(p2Pngs[1].style.mixBlendMode);
-// p2Pngs[4].style.zIndex = 1000;
 
 
 
@@ -112,7 +102,8 @@ let inputAngle1 = Math.atan2(mirror1.y - red1Source.y, mirror1.x - red1Source.x)
 let isDragging = false;
 
 // Function to draw the laser beam
-function drawLaser(x1, y1, x2, y2, color = "red") {
+function drawLaser(x1, y1, x2, y2, color = "red", o) {
+    ctx.globalAlpha = o;
     ctx.strokeStyle = color;
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -181,7 +172,7 @@ function reflectLaser(x1, y1, angle, l, color) {
     let x2 = x1 + l * Math.cos(reflectionAngle * (Math.PI / 180));
     let y2 = y1 + l * Math.sin(reflectionAngle * (Math.PI / 180));
 
-    drawLaser(mirror2.x, mirror2.y, x2, y2, color);
+    drawLaser(mirror2.x, mirror2.y, x2, y2, color, 0.8);
     return {
         x: x2,
         y: y2,
@@ -211,37 +202,15 @@ function isLaserIntersectingDeflector(x1, y1, x2, y2) {
 // Split the laser into multiple beams at the deflector
 function deflectLaser(x, y, angle) {
     let r = 150;
-    let beams = [{
-            x: x + (r - 5) * Math.cos((angle + 77) * (Math.PI / 180)),
-            y: y + (r - 5) * Math.sin((angle + 77) * (Math.PI / 180))
-        },
-        {
-            x: x + r * Math.cos((angle + 70) * (Math.PI / 180)),
-            y: y + r * Math.sin((angle + 70) * (Math.PI / 180))
-        },
-        {
-            x: x + r * Math.cos((angle + 60) * (Math.PI / 180)),
-            y: y + r * Math.sin((angle + 60) * (Math.PI / 180))
-        },
-        {
-            x: x + r * Math.cos((angle + 50) * (Math.PI / 180)),
-            y: y + r * Math.sin((angle + 50) * (Math.PI / 180))
-        },
-        {
-            x: x + r * Math.cos((angle + 40) * (Math.PI / 180)),
-            y: y + r * Math.sin((angle + 40) * (Math.PI / 180))
-        },
-        {
-            x: x + r * Math.cos((angle + 30) * (Math.PI / 180)),
-            y: y + r * Math.sin((angle + 30) * (Math.PI / 180))
-        },
-        {
-            x: x + (r + 15) * Math.cos((angle + 20) * (Math.PI / 180)),
-            y: y + (r + 15) * Math.sin((angle + 20) * (Math.PI / 180))
+    let beams = [];
+    for (let i = 2; i < 77; i += 5) {
+        let b = {
+            x: x + r * Math.cos((angle + i) * (Math.PI / 180)),
+            y: y + r * Math.sin((angle + i) * (Math.PI / 180))
         }
-    ];
-
-    beams.forEach((beam) => drawLaser(x + 18, y, beam.x, beam.y, "red"));
+        beams.push(b);
+    }
+    beams.forEach((beam) => drawLaser(x + 18, y, beam.x, beam.y, "red", 0.4));
 }
 
 // Update function to redraw everything
@@ -252,13 +221,13 @@ function update() {
 
     // Draw initial laser
     //drawLaser(red1Source.x, red1Source.y, mirror1.x, mirror1.y);
-    drawLaser(red1Source.x, red1Source.y, mirror2.x, mirror2.y, "red");
+    drawLaser(red1Source.x, red1Source.y, mirror2.x, mirror2.y, "red", 0.5);
 
     // Reflect the laser at the mirror1
 
-    let reflected2 = reflectLaser(mirror2.x+3, mirror2.y+3, inputAngle+1,250,"red");
-    let reflected = reflectLaser(mirror2.x, mirror2.y, inputAngle,250,"blue");
-    let reflected1 = reflectLaser(mirror1.x, mirror1.y, inputAngle1,100, "red");
+    let reflected2 = reflectLaser(mirror2.x + 3, mirror2.y + 3, inputAngle + 1, 250, "red");
+    let reflected = reflectLaser(mirror2.x, mirror2.y, inputAngle, 250, "blue");
+    let reflected1 = reflectLaser(mirror1.x, mirror1.y, inputAngle1, 100, "red");
 
     // Check if the reflected laser intersects the deflector
     let intersection = getIntersection(mirror1.x, mirror1.y, reflected1.x, reflected1.y, deflector.x1, deflector.y1, deflector.x2, deflector.y2);

@@ -17,38 +17,49 @@ let p4PngNames = ["lasers", "bg2", "bg1", "red", "active2", "active1"];
 let p4Pngs = [];
 loadPngs(panel4, "panelsImg/panel4/", p4PngNames, p4Pngs);
 p4Pngs[5].style.opacity = "0";
+p4Pngs[0].style.opacity = "0";
 
 // the moving atom
-const circle = document.getElementById("circle");
+let circle = document.getElementById("circle");
 let p4ANames = ["atom3", "atom2", "atom1"];
 let p4As = [];
 loadPngs(circle, "panelsImg/panel4/", p4ANames, p4As);
 
-function moveCircle() {
-    let newX = (0.5 - Math.random()) * 20;
-    let newY = (0.5 - Math.random()) * 20;
+// Cache Circle Center
+let circleCenterX, circleCenterY;
+function updateCircleCenter() {
+    let rect = circle.getBoundingClientRect();
+    circleCenterX = rect.left + 163;
+    circleCenterY = rect.top + 322;
+}
+updateCircleCenter(); // Call once to cache values
+
+function moveCircle(r) {
+    let newX = (0.5 - Math.random()) * r;
+    let newY = (0.5 - Math.random()) * r;
     circle.style.transition = "transform 0.8s linear"; // Smooth movement
     circle.style.transform = `translate(${newX}px, ${newY}px)`;
 
 }
 
-function slowCircle() {
-    let x = parseFloat(circle.style.left) || 0;
-    let y = parseFloat(circle.style.top) || 0;
-    // x = (0.5 - Math.random()) * x*0.3;
-    // y = (0.5 - Math.random()) * y*0.3;
-    circle.style.transition = "transform 2.8s linear"; // Smooth movement
-    circle.style.left= "0";
-    circle.style.top= "0";
+// Efficient Animation Loop
+let animating = false;
+function animateCircle() {
+    if (!animating) return;
+    moveCircle(motIsOn ? 5 : 35);
+    requestAnimationFrame(animateCircle);
+}
+function startCircleAnimation() {
+    if (animating) return;
+    animating = true;
+    animateCircle();
 }
 
-
-
-if (motIsOn == false) {
-    setTimeout(() => {
-        setInterval(moveCircle, 400);
-    }, 500);
+function stopCircleAnimation() {
+    animating = false;
 }
+// Start animation once after a delay
+setTimeout(startCircleAnimation, 500);
 
 
 let angle4 = 0;
@@ -115,7 +126,7 @@ let speed = 0;
 
 function rotateCircles() {
     if (speed < speedMax) {
-        speed += 0.002;
+        speed += 0.005;
     }
     angle += speed;
     document.getElementById("bigger_circle").style.transform = `rotate(${angle}deg)`;
@@ -152,7 +163,7 @@ if (locked == false) {
     p8Pngs[7].style.opacity = "0";
 }
 
-let cameraInterval  = "null";
+let cameraInterval = "null";
 
 let button2 = document.createElement("div");
 document.body.appendChild(button2);
@@ -160,65 +171,73 @@ button2.classList = "fakeButton";
 button2.style.left = "240px";
 button2.style.top = "70px";
 button2.addEventListener("click", () => {
+    if (locked) return; // Exit if already locked
+
     lockStart = true;
     console.log("lockStart");
-    if (locked == false) {
-        setTimeout(() => {
-            p3Pngs[6].style.transition = "transform 3s ease-in-out"; // Adjust the speed as needed
-            p3Pngs[6].style.transform = `translate(${atomDX}px, ${atomDY}px)`; // Apply the translation
-            p3Pngs[7].style.transition = "transform 3s ease-in-out"; // Adjust the speed as needed
-            p3Pngs[7].style.transform = `translate(${atomDX}px, ${atomDY}px)`; // Apply the translation
-        }, 500);
-        setTimeout(() => {
-            p3Pngs[1].style.transform = "translateY(10px)";
-            p3Pngs[1].style.transition = "transform 1.5s ease-in-out";
-            p3Pngs[2].style.transform = "translateY(10px)";
-            p3Pngs[2].style.transition = "transform 1.5s ease-in-out";
 
-        }, 7000);
-        setTimeout(() => {
-            locked = true;
-            rotateCircles();
-        }, 2500);
-        setTimeout(() => {
-            p8Pngs[4].style.transition = "transform 4s ease-in-out";
-            p8Pngs[4].style.transform = "scale(1)";
-        }, 2000);
-        setTimeout(() => {
-            // if (locked === true) {
-                p8Pngs[7].style.transition = "opacity 0.8s ease-in-out";
-                p8Pngs[7].style.opacity = "1";
-                console.log("locked");
-                motIsOn = true;
-                setTimeout(() => {
-                    setInterval(slowCircle, 400);
-                    console.log("slowing");
-                }, 600);
-            // }
-        }, 5500);
-        // 45轮流
+    setTimeout(() => {
+        applyTransform(p3Pngs[6], atomDX, atomDY, 3);
+        applyTransform(p3Pngs[7], atomDX, atomDY, 3);
+        applyScale(p8Pngs[4], 1, 4);
+        rotateCircles();
+    }, 500);
 
-        let activeIndex = 0; // 控制切换
-    let intervalTime = 800; // 交替时间（毫秒）
+    setTimeout(() => {
+        applyTranslateY(p3Pngs[1], 10, 1.5);
+        applyTranslateY(p3Pngs[2], 10, 1.5);
+    }, 3500);
 
-    if (cameraInterval) {
-        clearInterval(cameraInterval);
-    }
+    setTimeout(() => {
+        locked = true;
+        
+        startFlashing(p4Pngs[4], p4Pngs[5], 1000);
+    }, 2000);
+
+    setTimeout(() => {
+        fadeIn(p8Pngs[7], 0.8);
+        fadeIn(p4Pngs[0], 0.8);
+        console.log("locked");
+        motIsOn = true;
+        console.log("slowing");
+    }, 4500);
+});
+
+/** Helper Functions **/
+function applyTransform(element, x, y, duration) {
+    if (!element) return;
+    element.style.transition = `transform ${duration}s ease-in-out`;
+    element.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+function applyScale(element, scale, duration) {
+    if (!element) return;
+    element.style.transition = `transform ${duration}s ease-in-out`;
+    element.style.transform = `scale(${scale})`;
+}
+
+function applyTranslateY(element, y, duration) {
+    if (!element) return;
+    element.style.transition = `transform ${duration}s ease-in-out`;
+    element.style.transform = `translateY(${y}px)`;
+}
+
+function fadeIn(element, duration) {
+    if (!element) return;
+    element.style.transition = `opacity ${duration}s ease-in-out`;
+    element.style.opacity = "1";
+}
+
+function startFlashing(element1, element2, interval) {
+    if (!element1 || !element2) return;
+
+    if (cameraInterval) clearInterval(cameraInterval);
     cameraInterval = setInterval(() => {
-        if (p4Pngs[4] && p4Pngs[5]) {
-            if (activeIndex === 0) {
-                p4Pngs[4].style.opacity = "1";
-                p4Pngs[5].style.opacity = "0";
-            } else {
-                p4Pngs[4].style.opacity = "0";
-                p4Pngs[5].style.opacity = "1";
-            }
-            activeIndex = 1 - activeIndex; // 在 0 和 1 之间切换
-        }
-    }, intervalTime);
-
-    }
-})
+        let visible = element1.style.opacity === "0";
+        element1.style.opacity = visible ? "1" : "0";
+        element2.style.opacity = visible ? "0" : "1";
+    }, interval);
+}
 
 
 
@@ -226,7 +245,7 @@ button2.addEventListener("click", () => {
 
 //5
 
-let p5Names = ["arm4", "arm3", "arm2", "arm1", "purple","laser", "bed2", "bed1"];
+let p5Names = ["arm4", "arm3", "arm2", "arm1", "purple", "laser", "bed2", "bed1"];
 let p5Pngs = [];
 loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs);
 p5Pngs[3].style.mixBlendMode = "multiply";

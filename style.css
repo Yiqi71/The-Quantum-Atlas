@@ -49,114 +49,117 @@ table {
 
 
 /* below */
+body {
+    background-color: #ffefe2;
+}
 
-@media(max-width: 800px) {
-    body {
-        background-color: #ffefe2;
-    }
+img{
+    position:absolute;
+    top:0;
+    left:0;
+    image-rendering: pixelated;
+}
+#panel1 {
+    /* border: black solid 1pt; */
+    position: absolute;
+}
 
-    img{
-        position:absolute;
-        top:0;
-        left:0;
-    }
-    #panel1 {
-        /* border: black solid 1pt; */
-        position: absolute;
-    }
+#panel2 {
+    /* border: black solid 1pt; */
+    position: absolute;
+    /* left: 4.5em;
+    top: 5.5em; */
+}
 
-    #panel2 {
-        /* border: black solid 1pt; */
-        position: absolute;
-        /* left: 4.5em;
-        top: 5.5em; */
-    }
+#panel3 {
+    /* border: black solid 1pt; */
+    position: absolute;
+    /* left: 18em;
+    top: 2.5em; */
+}
 
-    #panel3 {
-        /* border: black solid 1pt; */
-        position: absolute;
-        /* left: 18em;
-        top: 2.5em; */
-    }
+#panel4 {
+    /* border: black solid 1pt; */
+    position: absolute;
+}
 
-    #panel4 {
-        /* border: black solid 1pt; */
-        position: absolute;
-    }
+#panel5 {
+    /* border: black solid 1pt; */
+    position: absolute;
+}
 
-    #panel5 {
-        /* border: black solid 1pt; */
-        position: absolute;
-    }
+#panel6 {
+    /* border: black solid 1pt; */
+    position: absolute;
+}
 
-    #panel6 {
-        /* border: black solid 1pt; */
-        position: absolute;
-    }
+#panel7 {
+    /* border: black solid 1pt; */
+    position: absolute;
+}
 
-    #panel7 {
-        /* border: black solid 1pt; */
-        position: absolute;
-    }
-
-    #panel8 {
-        /* border: black solid 1pt; */
-        position: absolute;
-    }
+#panel8 {
+    /* border: black solid 1pt; */
+    position: absolute;
+}
 
 
-    #puzzle1 {
-        /* border: black solid 1pt; */
-        width: 2em;
-        height: 2em;
-        transition: transform 1s ease-in-out;
-        position: absolute;
-        left: 18em;
-        top: 4em;
-        z-index: 10;
-    }
+#puzzle1 {
+    /* border: black solid 1pt; */
+    width: 2em;
+    height: 2em;
+    transition: transform 1s ease-in-out;
+    position: absolute;
+    left: 18em;
+    top: 4em;
+    z-index: 10;
+}
 
-    /* #container {
-        width: 50px;
-        height: 50px;
-        border: 1px solid black;
-        position: absolute;
+/* #container {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    position: absolute;
 
-        left: 8.2em;
-        top: 17.8em;
-        transform: translate(-50%, -50%);
-    }
+    left: 8.2em;
+    top: 17.8em;
+    transform: translate(-50%, -50%);
+}
 */
 
-    #circle {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        position: absolute;
-    } 
+#circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+} 
 
-    canvas {
-        position: absolute;
-        left: 0;
-        top: 0;
-        /* border: 3px solid black; */
-        width: 100%;
-        height: 100%;
-        z-index: 100;
+canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    /* border: 3px solid black; */
+    width: 100%;
+    height: 100%;
+    z-index: 100;
 
-    }
+}
 
-    #mirror {
-        z-index: 90;
-        /* Ensure it's on top */
-        position:absolute;
-    }
-    .fakeButton{
-        position: absolute;
-        border: 1px solid black;
-        width: 50px;
-        height: 50px;
-        z-index: 8000;
-    }
+#mirror {
+    z-index: 90;
+    /* Ensure it's on top */
+    position:absolute;
+}
+.fakeButton{
+    position: absolute;
+    /* border: 1px solid black; */
+    width: 50px;
+    height: 50px;
+    z-index: 8000;
+}
+@media(max-width: 800px) {
+body{
+    width : 800px;
+}
 
 }

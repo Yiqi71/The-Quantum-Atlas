@@ -21,7 +21,7 @@ function checkCamera() {
     } else {
         
         let activeIndex = 0; // 控制切换
-        let intervalTime = 500; // 交替时间（毫秒）
+        let intervalTime = 280; // 交替时间（毫秒）
 
         if (cameraInterval) {
             clearInterval(cameraInterval);
