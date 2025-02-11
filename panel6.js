@@ -2,10 +2,9 @@ import { scaling } from './main.js';
 import { loadPngs } from './main.js';
 
 
-let p6Names = ["passive", "active1", "active2", "shade", "face"];
+let p6Names = ["passive", "active1", "active2", "shade"];
 let p6Pngs = [];
 loadPngs(document.getElementById("panel6"),`panelsImg/panel6/`, p6Names, p6Pngs);
-p6Pngs[4].style.zIndex = -1;
 let cameraStage = "off";
 let cameraInterval = null;
 function checkCamera() {

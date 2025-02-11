@@ -8,12 +8,12 @@ import {
 
 
 // Laser source
-let p1PngNames = ["bg4", "bg3", "bg2", "bg1", "active1", "active2", "button_passive", "button_active"];
+let p1PngNames = [ "bg1", "active1", "active2", "button_passive", "button_active"];
 let p1Pngs = [];
 loadPngs(document.getElementById("panel1"), "panelsImg/panel1/", p1PngNames, p1Pngs);
+p1Pngs[1].style.opacity = "0";
+p1Pngs[2].style.opacity = "0";
 p1Pngs[4].style.opacity = "0";
-p1Pngs[5].style.opacity = "0";
-p1Pngs[7].style.opacity = "0";
 
 let button = document.createElement("div");
 document.body.appendChild(button);
@@ -29,15 +29,15 @@ button.addEventListener("click", () => {
     const intervalTime = 600; // Toggle interval (ms)
     let active = false;
 
-    if (!p1Pngs[4] || !p1Pngs[5]) return; // Ensure required elements exist
+    if (!p1Pngs[1] || !p1Pngs[2]) return; // Ensure required elements exist
 
-    toggleVisibility(p1Pngs[6], false); // Hide passive button
-    toggleVisibility(p1Pngs[7], true);  // Show active button
+    toggleVisibility(p1Pngs[3], false); // Hide passive button
+    toggleVisibility(p1Pngs[4], true);  // Show active button
 
     cameraInterval = setInterval(() => {
         active = !active;
-        toggleVisibility(p1Pngs[4], active);
-        toggleVisibility(p1Pngs[5], !active);
+        toggleVisibility(p1Pngs[1], active);
+        toggleVisibility(p1Pngs[2], !active);
         update();
     }, intervalTime);
 });
@@ -51,12 +51,10 @@ function toggleVisibility(element, isVisible) {
 
 
 // 2
-let p2PngNames = ["bg5", "bg4", "bg3", "bg2", "bg1"];
+let p2PngNames = ["bg1"];
 let p2Pngs = [];
 
 loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2Pngs);
-p2Pngs[2].style.mixBlendMode = "multiply";
-console.log(p2Pngs[1].style.mixBlendMode);
 
 
 
