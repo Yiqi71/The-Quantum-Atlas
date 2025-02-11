@@ -13,23 +13,19 @@ noise.style.zIndex = -10;
 document.body.appendChild(noise);
 
 
-//prepare panels
-let uPanels = [];
-let panels;
+//prepare locked panels
+export let uPanels = [];
 
-let wholePsLeft = 80;
-let wholePsTop = 50;
 export let scaling = 0.19;
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 9; i++) {
     // prepare unfinished panel pics
-    // uPanels[i] = document.createElement("img");
-    // uPanels[i].src = `panelsImg/blank_${i+1}.png`;
-    // uPanels[i].width *= scaling;
-    // uPanels[i].style.position = "absolute";
-    // uPanels[i].style.zIndex = "50";
-
-    // prepare finished panel pics
-
+    uPanels[i] = document.createElement("img");
+    uPanels[i].src = `panelsImg/blackPanel_${i+1}.png`;
+    uPanels[i].width *= scaling;
+    uPanels[i].style.position = "absolute";
+    uPanels[i].style.zIndex = 40;
+    uPanels[i].style.opacity = 0.6;
+    document.body.appendChild(uPanels[i]);
 
 }
 

@@ -1,17 +1,20 @@
-
 import {
     loadPngs
 } from './main.js';
 
+import {
+    uPanels
+} from './main.js';
 
 
 // Laser source
-let p1PngNames = [ "bg1", "active1", "active2", "button_passive", "button_active"];
+let p1PngNames = ["bg1", "active1", "active2", "button_passive", "button_active"];
 let p1Pngs = [];
 loadPngs(document.getElementById("panel1"), "panelsImg/panel1/", p1PngNames, p1Pngs);
 p1Pngs[1].style.opacity = "0";
 p1Pngs[2].style.opacity = "0";
 p1Pngs[4].style.opacity = "0";
+p1Pngs[3].style.zIndex = 41;
 
 let button = document.createElement("div");
 document.body.appendChild(button);
@@ -22,7 +25,8 @@ let laserOn = false;
 let cameraInterval = null;
 button.addEventListener("click", () => {
     if (cameraInterval) return; // Prevent multiple intervals
-
+    uPanels[0].style.opacity = 0;
+    // zindex of SLM and atom +++++
     laserOn = true;
     const intervalTime = 600; // Toggle interval (ms)
     let active = false;
@@ -30,7 +34,7 @@ button.addEventListener("click", () => {
     if (!p1Pngs[1] || !p1Pngs[2]) return; // Ensure required elements exist
 
     toggleVisibility(p1Pngs[3], false); // Hide passive button
-    toggleVisibility(p1Pngs[4], true);  // Show active button
+    toggleVisibility(p1Pngs[4], true); // Show active button
 
     cameraInterval = setInterval(() => {
         active = !active;
