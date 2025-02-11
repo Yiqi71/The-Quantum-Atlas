@@ -34,7 +34,6 @@ let fixedOutline = document.createElement("img");
 fixedOutline.src = `panelsImg/fixed_outline.png`;
 fixedOutline.width *= scaling;
 fixedOutline.style.zIndex = 888;
-fixedOutline.style.pointerEvents = "none";
 poster.appendChild(fixedOutline);
 
 //puzzle
