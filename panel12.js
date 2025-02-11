@@ -6,8 +6,10 @@ import {
     uPanels
 } from './main.js';
 
+let poster = document.getElementById("poster");
+let anchor = poster.getBoundingClientRect();
 
-// Laser source
+// 1
 let p1PngNames = ["bg1", "active1", "active2", "button_passive", "button_active"];
 let p1Pngs = [];
 loadPngs(document.getElementById("panel1"), "panelsImg/panel1/", p1PngNames, p1Pngs);
@@ -16,8 +18,16 @@ p1Pngs[2].style.opacity = "0";
 p1Pngs[4].style.opacity = "0";
 p1Pngs[3].style.zIndex = 41;
 
+
+
+// 2
+let p2PngNames = ["backg", "bg1"];
+let p2Pngs = [];
+loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2Pngs);
+
+
 let button = document.createElement("div");
-document.body.appendChild(button);
+poster.appendChild(button);
 button.classList = "fakeButton";
 button.style.left = "120px";
 button.style.top = "50px";
@@ -26,7 +36,9 @@ let cameraInterval = null;
 button.addEventListener("click", () => {
     if (cameraInterval) return; // Prevent multiple intervals
     uPanels[0].style.opacity = 0;
-    // zindex of SLM and atom +++++
+    // zindex of atom +++++
+    // split SLM from bg
+    p2Pngs[1].style.zIndex = 41;
     laserOn = true;
     const intervalTime = 600; // Toggle interval (ms)
     let active = false;
@@ -52,11 +64,7 @@ function toggleVisibility(element, isVisible) {
 
 
 
-// 2
-let p2PngNames = ["bg1"];
-let p2Pngs = [];
 
-loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2Pngs);
 
 
 
@@ -64,8 +72,11 @@ loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2P
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+
+canvas.width = poster.clientWidth;
+canvas.height = poster.clientHeight;
+
+
 
 let red1Source = {
     x: 178,
@@ -242,25 +253,30 @@ let initialAngle = 0;
 let mouseIsDown = false;
 // Drag-to-Rotate functionality
 canvas.addEventListener("mousedown", (event) => {
-    let dx = event.clientX - mirror2.x + mirror2.adjustX;
-    let dy = event.clientY - mirror2.y + mirror2.adjustY;
+    if (laserOn) {
+        let dx = event.clientX - mirror2.x + mirror2.adjustX - anchor.left;
+        let dy = event.clientY - mirror2.y + mirror2.adjustY;
+        console.log(dx);
+        console.log(event.clientX + "-" + mirror2.x + "+" + mirror2.adjustX + "-" + anchor.left);
+        console.log("canvas");
 
 
-    // If mouse is close to the mirror1, start dragging to rotate
-    if (Math.sqrt(dx * dx + dy * dy) < 80) {
-        isDragging = true;
+        // If mouse is close to the mirror1, start dragging to rotate
+        if (Math.sqrt(dx * dx + dy * dy) < 80) {
+            isDragging = true;
+            initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+            mouseIsDown = true;
 
-        initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-        mouseIsDown = true;
-
+        }
     }
+
 });
 localStorage.setItem("hitted", "false");
 
 canvas.addEventListener("mousemove", (event) => {
     if (isDragging) {
         // Calculate the angle between mirror1 and mouse position
-        let dx = event.clientX - mirror2.x + mirror2.adjustX;
+        let dx = event.clientX - mirror2.x + mirror2.adjustX - anchor.left;
         let dy = event.clientY - mirror2.y + mirror2.adjustY;
         console.log(dx, dy);
 

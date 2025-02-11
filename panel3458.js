@@ -7,7 +7,7 @@ import {
 
 let hitted = localStorage.getItem("hitted");
 
-
+let poster = document.getElementById("poster");
 
 //4
 let motIsOn = false;
@@ -26,11 +26,16 @@ let p4As = [];
 loadPngs(circle, "panelsImg/panel4/", p4ANames, p4As);
 
 // Cache Circle Center
+// ??????????????????
+// ???????????
 let circleCenterX, circleCenterY;
 function updateCircleCenter() {
     let rect = circle.getBoundingClientRect();
-    circleCenterX = rect.left + 163;
+    let anchor = poster.getBoundingClientRect();
+    circleCenterX = rect.left + 163 -anchor.left;
     circleCenterY = rect.top + 322;
+    console.log(anchor.left);
+    console.log(circleCenterX);
 }
 updateCircleCenter(); // Call once to cache values
 
@@ -68,8 +73,8 @@ function rotateCircle() {
     angle4 += 0.3; // Adjust speed (degrees per frame)
 
     let circleRect = circle.getBoundingClientRect();
-    let circleCenterX = circleRect.left + 163;
-    let circleCenterY = circleRect.top + 322;
+    let circleCenterX =  163;
+    let circleCenterY = 322;
 
     // atom
     p4As[2].style.transformOrigin = `${circleCenterX}px ${circleCenterY}px`;
@@ -165,7 +170,7 @@ if (locked == false) {
 let cameraInterval = "null";
 
 let button2 = document.createElement("div");
-document.body.appendChild(button2);
+poster.appendChild(button2);
 button2.classList = "fakeButton";
 button2.style.left = "240px";
 button2.style.top = "70px";

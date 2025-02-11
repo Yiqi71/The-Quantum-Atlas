@@ -51,7 +51,7 @@ camera.style.height = "80px";
 camera.style.left = "300px";
 camera.style.top = "280px";
 camera.style.zIndex = 100;
-document.body.appendChild(camera);
+poster.appendChild(camera);
 
 
 camera.addEventListener("click", function () {

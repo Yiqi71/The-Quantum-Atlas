@@ -6,27 +6,20 @@
 // localStorage.setItem("p5Finished", "false");
 // localStorage.setItem("puzzle1Moved","false");
 
-// noise
-let noise = document.createElement("img");
-noise.src = "panelsImg/Noise.png";
-noise.style.zIndex = -10;
-document.body.appendChild(noise);
 
+export let scaling = 0.19;
+let poster = document.getElementById("poster");
 
 //prepare locked panels
 export let uPanels = [];
-
-export let scaling = 0.19;
 for (let i = 0; i < 9; i++) {
-    // prepare unfinished panel pics
     uPanels[i] = document.createElement("img");
     uPanels[i].src = `panelsImg/blackPanel_${i+1}.png`;
     uPanels[i].width *= scaling;
     uPanels[i].style.position = "absolute";
     uPanels[i].style.zIndex = 40;
     uPanels[i].style.opacity = 0.6;
-    document.body.appendChild(uPanels[i]);
-
+    poster.appendChild(uPanels[i]);
 }
 
 // load background
@@ -34,7 +27,7 @@ let fixedBg = document.createElement("img");
 fixedBg.src = `panelsImg/bg.png`;
 fixedBg.width *= scaling;
 fixedBg.style.zIndex = -9;
-document.body.appendChild(fixedBg);
+poster.appendChild(fixedBg);
 
 // load outline
 let fixedOutline = document.createElement("img");
@@ -42,7 +35,7 @@ fixedOutline.src = `panelsImg/fixed_outline.png`;
 fixedOutline.width *= scaling;
 fixedOutline.style.zIndex = 888;
 fixedOutline.style.pointerEvents = "none";
-document.body.appendChild(fixedOutline);
+poster.appendChild(fixedOutline);
 
 //puzzle
 // console.log(localStorage.getItem(`puzzle1Moved`));
@@ -80,9 +73,7 @@ export function loadPngs(div, fileName, names, pngs) {
         new_img.src = fileName + names[i] + ".png";
         new_img.alt = fileName + names[i] + ".png";
         new_img.width *= scaling;
-        // new_img.height *= pngScaling;
         pngs[i] = new_img;
         div.appendChild(pngs[i]);
-
     }
 }
