@@ -17,11 +17,11 @@ for (let i = 0; i < 9; i++) {
     uPanels[i].src = `panelsImg/blackPanel_${i+1}.png`;
     uPanels[i].width *= scaling;
     uPanels[i].style.position = "absolute";
-    uPanels[i].style.zIndex = 40;
+    uPanels[i].style.zIndex = 30;
     uPanels[i].style.opacity = 0.6;
     poster.appendChild(uPanels[i]);
 }
-
+uPanels[1].style.zIndex = 42;
 // load background
 let fixedBg = document.createElement("img");
 fixedBg.src = `panelsImg/bg.png`;
@@ -62,6 +62,7 @@ poster.appendChild(fixedOutline);
 
 //     }
 // }
+
 
 
 
