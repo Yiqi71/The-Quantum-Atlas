@@ -27,6 +27,7 @@ let p2PngNames = ["backg", "bg1"];
 let p2Pngs = [];
 loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2Pngs);
 p2Pngs[0].style.zIndex = 41;
+
 // 3
 let panel3 = document.getElementById(`panel3`);
 let circleContainer = document.createElement("div");
@@ -71,11 +72,18 @@ p4Pngs[2].style.opacity = "0.6";
 p4Pngs[4].style.opacity = "0";
 p4Pngs[0].style.opacity = "0";
 
-//5
+let circle = document.getElementById("circle");
+let p4ANames = ["atom3", "atom2", "atom1"];
+let p4As = [];
+loadPngs(circle, "panelsImg/panel4/", p4ANames, p4As);
+
+// 5
 let p5Names = ["purple", "laser", "bed2", "bed1", "atom"];
 let p5Pngs = [];
 loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs);
-
+p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
+p5Pngs[1].style.transition = "clip-path 2s linear";
+p5Pngs[1].style.zIndex = "50";
 // 8
 let p8PngNames = ["circle1", "circle1_border", "circle2", "atoms2", "atoms1", "entangled"];
 let p8Pngs = [];
@@ -195,11 +203,13 @@ function reflectLaser(ctx, x1, y1, angle, l, color) {
     let y2 = y1 + l * Math.sin(reflectionAngle * (Math.PI / 180));
 
     drawLaser(ctx, mirror2.x, mirror2.y, x2, y2, color, 0.8);
-    return { x: x2, y: y2, angle: reflectionAngle };
+    return {
+        x: x2,
+        y: y2,
+        angle: reflectionAngle
+    };
 }
 
-
-// Split the laser into multiple beams at the deflector
 function deflectLaser(ctx, x, y, angle) {
     let r = 130;
     let beams = [];
@@ -213,8 +223,6 @@ function deflectLaser(ctx, x, y, angle) {
     beams.forEach((beam) => drawLaser(ctx, x, y, beam.x, beam.y, "red", 0.4));
 }
 
-
-// check whether deflected
 function isLaserIntersectingDeflector(x1, y1, x2, y2) {
     let dx = x2 - x1;
     let dy = y2 - y1;
@@ -231,10 +239,6 @@ function isLaserIntersectingDeflector(x1, y1, x2, y2) {
     return discriminant >= 0; // If true, the laser intersects the deflector
 }
 
-
-
-
-// Update function to redraw everything
 function update() {
     reflectCtx.clearRect(0, 0, reflectCanvas.width, reflectCanvas.height);
     deflectCtx.clearRect(0, 0, deflectCanvas.width, deflectCanvas.height);
@@ -249,7 +253,7 @@ function update() {
 
     // Check if the reflected laser intersects the deflector
     let intersection = getIntersection(mirror2.x, mirror2.y, reflected1.x, reflected1.y, deflector.x1, deflector.y1, deflector.x2, deflector.y2);
-    
+
     if (intersection) {
         deflectLaser(deflectCtx, intersection.x, intersection.y, reflected.angle);
     }
@@ -259,9 +263,7 @@ let initialAngle = 0;
 let mouseIsDown = false;
 
 
-
-
-// button1
+// button1 - shoot laser
 let button = document.createElement("div");
 poster.appendChild(button);
 button.classList = "fakeButton";
@@ -273,7 +275,6 @@ button.addEventListener("click", () => {
     if (cameraInterval1) return; // Prevent multiple intervals
     uPanels[0].style.opacity = 0;
     // zindex of atom +++++
-    // split SLM from bg
     p3Pngs[5].style.zIndex = 41;
     p3Pngs[6].style.zIndex = 41;
     p2Pngs[1].style.zIndex = 141;
@@ -290,27 +291,14 @@ button.addEventListener("click", () => {
         active = !active;
         toggleVisibility(p1Pngs[1], active);
         toggleVisibility(p1Pngs[2], !active);
-
     }, intervalTime);
     update();
 });
-
-/** Helper function for setting element visibility **/
-function toggleVisibility(element, isVisible) {
-    if (element) element.style.opacity = isVisible ? "1" : "0";
-}
-
 
 
 
 //4
 let motIsOn = false;
-
-// the moving atom
-let circle = document.getElementById("circle");
-let p4ANames = ["atom3", "atom2", "atom1"];
-let p4As = [];
-loadPngs(circle, "panelsImg/panel4/", p4ANames, p4As);
 
 // Cache Circle Center
 let circleCenterX, circleCenterY;
@@ -378,12 +366,8 @@ function rotateCircle() {
 rotateCircle(); // Start the animation
 
 
-
-
 // 3
 // moving circles
-
-
 let angle = 0;
 let speedMax = 0.5
 let speed = 0;
@@ -404,58 +388,15 @@ function rotateCircles() {
 let atomDX = -23;
 let atomDY = -26;
 let lockStart = false;
-
-
 let locked = false;
-
-
-
 
 if (locked == false) {
     p8Pngs[5].style.opacity = "0";
 }
 
+let flashingLaser = document.getElementById("flashingLaser");
+
 let cameraInterval2 = "null";
-
-let button2 = document.createElement("div");
-poster.appendChild(button2);
-button2.classList = "fakeButton";
-button2.style.left = "240px";
-button2.style.top = "70px";
-button2.addEventListener("click", () => {
-    if (locked) return; // Exit if already locked
-
-    lockStart = true;
-    console.log("lockStart");
-
-    setTimeout(() => {
-        applyTransform(p3Pngs[5], atomDX, atomDY, 3);
-        applyTransform(p3Pngs[6], atomDX, atomDY, 3);
-        applyScale(p8Pngs[2], 1, 4);
-        rotateCircles();
-    }, 500);
-
-    setTimeout(() => {
-        applyTranslateY(p3Pngs[0], 10, 1.5);
-        applyTranslateY(p3Pngs[1], 10, 1.5);
-    }, 3500);
-
-    setTimeout(() => {
-        locked = true;
-
-        startFlashing(p4Pngs[3], p4Pngs[4], 1000);
-    }, 2000);
-
-    setTimeout(() => {
-        fadeIn(p8Pngs[5], 0.8);
-        fadeIn(p4Pngs[0], 0.8);
-        console.log("locked");
-        motIsOn = true;
-        console.log("slowing");
-    }, 4500);
-});
-
-
 let triangle = document.getElementById("triangleContainer");
 
 // Drag-to-Rotate functionality
@@ -468,10 +409,8 @@ triangle.addEventListener("mousedown", (event) => {
             isDragging = true;
             initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
             mouseIsDown = true;
-
         }
     }
-
 });
 
 triangle.addEventListener("mousemove", (event) => {
@@ -509,15 +448,14 @@ triangle.addEventListener("mouseup", () => {
         }, 500);
 
         setTimeout(() => {
+            locked = true;
+            startFlashing(p4Pngs[3], p4Pngs[4], 1000);
+        }, 2000);
+
+        setTimeout(() => {
             applyTranslateY(p3Pngs[0], 10, 1.5);
             applyTranslateY(p3Pngs[1], 10, 1.5);
         }, 3500);
-
-        setTimeout(() => {
-            locked = true;
-
-            startFlashing(p4Pngs[3], p4Pngs[4], 1000);
-        }, 2000);
 
         setTimeout(() => {
             fadeIn(p8Pngs[5], 0.8);
@@ -525,15 +463,31 @@ triangle.addEventListener("mouseup", () => {
             console.log("locked");
             motIsOn = true;
             console.log("slowing");
+            flashingLaser.style.opacity = 1;
+            flashingLaser.style.pointerEvents = "auto";
+
         }, 4500);
     }
 });
 
+flashingLaser.addEventListener("click", () => {
+    console.log("tweezerOn!");
+    p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
+    setTimeout(() => {
+        uPanels[4].style.opacity = 0;
+    },2000);
+    
+    // setTimeout(() => {
+    //     window.tweezerOn = true; // 图片完全出现后设置 tweezerOn = true
+    // }, 2000); // 2秒后执行
+});
 
 
+/** Helper function for setting element visibility **/
+function toggleVisibility(element, isVisible) {
+    if (element) element.style.opacity = isVisible ? "1" : "0";
+}
 
-
-/** Helper Functions **/
 function applyTransform(element, x, y, duration) {
     if (!element) return;
     element.style.transition = `transform ${duration}s ease-in-out`;

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>斜线 Reveal 图片</title>
+    <style>
+        .container {
+            position: relative;
+            width: 300px; /* 根据你的图片尺寸调整 */
+            height: 200px;
+            overflow: hidden;
+            background-color: lightgray; /* 可选：在图片未显示时的背景 */
+        }
+
+        #image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+            transition: clip-path 2s linear;
+        }
+    </style>
+</head>
+<body>
+    <button id="button5">点击显示图片</button>
+    <div class="container">
+        < img id="image" src="your-image.jpg" alt="图片">
+    </div>
+
+    <script>
+        document.getElementById("button5").addEventListener("click", function() {
+            let img = document.getElementById("image");
+            img.style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
+            setTimeout(() => {
+                window.tweezerOn = true; // 图片完全出现后设置 tweezerOn = true
+            }, 2000); // 2秒后执行
+        });
+    </script>
+</body>
+</html>
