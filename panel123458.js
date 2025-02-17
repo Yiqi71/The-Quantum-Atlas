@@ -84,6 +84,12 @@ loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs
 p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
 p5Pngs[1].style.transition = "clip-path 2s linear";
 p5Pngs[1].style.zIndex = "50";
+
+// 6
+let p6Names = ["passive", "active1", "active2", "shade"];
+let p6Pngs = [];
+loadPngs(document.getElementById("panel6"), `panelsImg/panel6/`, p6Names, p6Pngs);
+
 // 8
 let p8PngNames = ["circle1", "circle1_border", "circle2", "atoms2", "atoms1", "entangled"];
 let p8Pngs = [];
@@ -307,16 +313,43 @@ function updateCircleCenter() {
     let rect = circle.getBoundingClientRect();
     let anchor = poster.getBoundingClientRect();
     circleCenterX = rect.left + 163 - anchor.left;
-    circleCenterY = rect.top + 322;
+    circleCenterY = rect.top + 323;
 }
 updateCircleCenter(); // Call once to cache values
 
-function moveCircle(r) {
-    let newX = (0.5 - Math.random()) * r;
-    let newY = (0.5 - Math.random()) * r;
-    circle.style.transition = "transform 0.8s linear"; // Smooth movement
-    circle.style.transform = `translate(${newX}px, ${newY}px)`;
+// MOVING ATOM IN MOT
+let circleX = 0;
+let circleY = 0;
+let centerX = 0;
+let centerY = 0;
+let speedX = 5;
+let speedY = -5;
+let damping = 0.99;
 
+function moveCircle(r) {
+    let aX = (centerX - circleX) / 140;
+    speedX += aX;
+    // speedX *= damping;
+    circleX += speedX;
+
+    let aY = (centerY - circleY) / 110;
+    speedY += aY;
+    // speedY *= damping;
+    circleY += speedY;
+    if (r > 100) {
+        if (circleX >= centerX + r || circleX <= centerX - r) {
+            speedX = -speedX * damping;
+        }
+
+        if (circleY >= centerY + r || circleY <= centerY - r) {
+            speedY = -speedY * damping;
+        }
+        circle.style.transition = "transform 0.8s linear"; // Smooth movement
+        circle.style.transform = `translate(${circleX}px, ${circleY}px)`;
+    } else {
+        circle.style.transition = "transform 1s linear";
+        circle.style.transform = `translate(${0}px, ${0}px)`;
+    }
 }
 
 // Efficient Animation Loop
@@ -324,7 +357,7 @@ let animating = false;
 
 function animateCircle() {
     if (!animating) return;
-    moveCircle(motIsOn ? 5 : 35);
+    moveCircle(motIsOn ? 5 : 105);
     requestAnimationFrame(animateCircle);
 }
 
@@ -475,13 +508,76 @@ flashingLaser.addEventListener("click", () => {
     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
     setTimeout(() => {
         uPanels[4].style.opacity = 0;
-    },2000);
-    
+    }, 2000);
+
     // setTimeout(() => {
     //     window.tweezerOn = true; // 图片完全出现后设置 tweezerOn = true
     // }, 2000); // 2秒后执行
 });
 
+// 6 camera
+let cameraStage = "off";
+let cameraInterval = null;
+
+function checkCamera() {
+    if (cameraStage == "off") {
+        p6Pngs[0].style.display = "block";
+        p6Pngs[1].style.display = "none";
+        p6Pngs[2].style.display = "none";
+        if (cameraInterval) {
+            clearInterval(cameraInterval);
+            cameraInterval = null; // 避免多次 clear
+        }
+
+    } else {
+
+        let activeIndex = 0; // 控制切换
+        let intervalTime = 280; // 交替时间（毫秒）
+
+        if (cameraInterval) {
+            clearInterval(cameraInterval);
+        }
+        cameraInterval = setInterval(() => {
+            if (p6Pngs[1] && p6Pngs[2]) {
+                p6Pngs[0].style.display = "none";
+                if (activeIndex === 0) {
+                    p6Pngs[1].style.display = "block";
+                    p6Pngs[2].style.display = "none";
+                } else {
+                    p6Pngs[1].style.display = "none";
+                    p6Pngs[2].style.display = "block";
+                }
+                activeIndex = 1 - activeIndex; // 在 0 和 1 之间切换
+            }
+        }, intervalTime);
+    }
+}
+checkCamera();
+
+// click to turn on camera
+p6Pngs[3].style.display = "block";
+let camera = document.createElement("div");
+// camera.style.border = "1px solid black";
+camera.style.position = "absolute";
+camera.style.width = "80px";
+camera.style.height = "80px";
+camera.style.left = "300px";
+camera.style.top = "280px";
+camera.style.zIndex = 100;
+poster.appendChild(camera);
+
+
+camera.addEventListener("click", function () {
+    if (cameraStage !== "on") { // 避免重复触发
+        cameraStage = "on";
+        checkCamera();
+
+        setTimeout(() => {
+            cameraStage = "off";
+            checkCamera();
+        }, 5000); // 5秒后切换回 "off"
+    }
+})
 
 /** Helper function for setting element visibility **/
 function toggleVisibility(element, isVisible) {

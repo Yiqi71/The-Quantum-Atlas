@@ -22,6 +22,7 @@ for (let i = 0; i < 9; i++) {
     poster.appendChild(uPanels[i]);
 }
 uPanels[1].style.zIndex = 42;
+
 // load background
 let fixedBg = document.createElement("img");
 fixedBg.src = `panelsImg/bg.png`;
@@ -35,37 +36,6 @@ fixedOutline.src = `panelsImg/fixed_outline.png`;
 fixedOutline.width *= scaling;
 fixedOutline.style.zIndex = 888;
 poster.appendChild(fixedOutline);
-
-//puzzle
-// console.log(localStorage.getItem(`puzzle1Moved`));
-
-// for (let i = 0; i < 8; i++) {
-//     let div = document.getElementById(`panel${i+1}`);
-//     div.style.left = `0`;
-//     div.style.top = `0`;
-//     if (localStorage.getItem(`p${i+1}Finished`) === "true") {
-//         if (localStorage.getItem(`puzzle1Moved`) == "false") {
-//             document.body.style.pointerEvents = "none";
-//             setTimeout(() => {
-//                 document.getElementById("puzzle1").style.transform = "translateY(-2em)";
-//                 document.body.style.pointerEvents = "auto";
-//             }, 500);
-//             localStorage.setItem("puzzle1Moved", "true");
-//         } else {
-//             document.getElementById("puzzle1").style.top = "2em";
-//         }
-
-//         document.getElementById(`panel${i+1}`).appendChild(panels[i]);
-//     } else {
-//         // document.getElementById("panel1").style.backgroundColor = "grey";
-//         document.getElementById(`panel${i+1}`).appendChild(uPanels[i]);
-
-//     }
-// }
-
-
-
-
 
 export function loadPngs(div, fileName, names, pngs) {
     for (let i = 0; i < names.length; i++) {
