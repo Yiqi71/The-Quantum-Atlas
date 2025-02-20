@@ -47,9 +47,10 @@ for (let i = 0; i < circles.length; i++) {
     new_circle.id = circles[i];
     new_circle.src = "panelsImg/panel3/" + circles[i] + ".png";
     new_circle.alt = "panelsImg/panel3/" + circles[i] + ".png";
-    new_circle.width *= scaling;
-    new_circle.width *= circleScaling[i];
-    new_circle.style.position = "absolute";
+    new_circle.onload = () => {
+        new_circle.width *= scaling;
+        new_circle.width *= circleScaling[i];
+    }
     new_circle.style.left = circleLefts[i] + "px";
     new_circle.style.top = circleTops[i] + "px";
     circleContainer.appendChild(new_circle);
@@ -76,7 +77,11 @@ let circle = document.getElementById("circle");
 let p4ANames = ["atom3", "atom2", "atom1"];
 let p4As = [];
 loadPngs(circle, "panelsImg/panel4/", p4ANames, p4As);
-
+circle.style.left = "158px";
+circle.style.top = "315px";
+p4As.forEach((layer) =>
+    layer.style.margin = "auto auto"
+);
 // 5
 let p5Names = ["purple", "laser", "bed2", "bed1", "atom"];
 let p5Pngs = [];
@@ -84,6 +89,9 @@ loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs
 p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
 p5Pngs[1].style.transition = "clip-path 2s linear";
 p5Pngs[1].style.zIndex = "50";
+p5Pngs[4].style.left = "260px";
+p5Pngs[4].style.top = "480px";
+// p5Pngs[4].style.zIndex = "50";
 
 // 6
 let p6Names = ["passive", "active1", "active2", "shade"];
@@ -306,17 +314,6 @@ button.addEventListener("click", () => {
 //4
 let motIsOn = false;
 
-// Cache Circle Center
-let circleCenterX, circleCenterY;
-
-function updateCircleCenter() {
-    let rect = circle.getBoundingClientRect();
-    let anchor = poster.getBoundingClientRect();
-    circleCenterX = rect.left + 163 - anchor.left;
-    circleCenterY = rect.top + 323;
-}
-updateCircleCenter(); // Call once to cache values
-
 // MOVING ATOM IN MOT
 let circleX = 0;
 let circleY = 0;
@@ -379,18 +376,11 @@ let angle4 = 0;
 function rotateCircle() {
     angle4 += 0.3; // Adjust speed (degrees per frame)
 
-    let circleRect = circle.getBoundingClientRect();
-    let circleCenterX = 163;
-    let circleCenterY = 322;
-
     // atom
-    p4As[2].style.transformOrigin = `${circleCenterX}px ${circleCenterY}px`;
     p4As[2].style.transform = `rotate(${angle4}deg)`;
-    p4As[1].style.transformOrigin = `${circleCenterX}px ${circleCenterY}px`;
     p4As[1].style.transform = `rotate(${angle4}deg)`;
 
     // 底色
-    p4As[0].style.transformOrigin = `${circleCenterX}px ${circleCenterY}px`;
     p4As[0].style.transform = `rotate(${angle4}deg)`;
 
     requestAnimationFrame(rotateCircle); // Keep rotating
