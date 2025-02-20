@@ -26,7 +26,7 @@ p1Pngs[3].style.zIndex = 41;
 let p2PngNames = ["backg", "bg1"];
 let p2Pngs = [];
 loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2Pngs);
-p2Pngs[0].style.zIndex = 41;
+// p2Pngs[0].style.zIndex = 21;
 
 // 3
 let panel3 = document.getElementById(`panel3`);
@@ -82,6 +82,7 @@ circle.style.top = "315px";
 p4As.forEach((layer) =>
     layer.style.margin = "auto auto"
 );
+
 // 5
 let p5Names = ["purple", "laser", "bed2", "bed1", "atom"];
 let p5Pngs = [];
