@@ -571,14 +571,15 @@ function endDragging() {
             p1Pngs[1].style.opacity = "0";
             p1Pngs[2].style.opacity = "0";
 
-            reflectCanvas.style.opacity = "0";
-            deflectCanvas.style.opacity = "0";
+            
             
         }, 4500);
 
         setTimeout(() => {
+            reflectCanvas.style.opacity = "0";
+            deflectCanvas.style.opacity = "0";
             clearInterval(cameraInterval2);
-        }, 5500);
+        }, 6000);
     }
 }
 
