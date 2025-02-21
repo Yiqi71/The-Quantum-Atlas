@@ -1,12 +1,3 @@
-// reset!!!
-// localStorage.setItem("p1Finished", "false");
-// localStorage.setItem("p2Finished", "false");
-// localStorage.setItem("p3Finished", "false");
-// localStorage.setItem("p4Finished", "false");
-// localStorage.setItem("p5Finished", "false");
-// localStorage.setItem("puzzle1Moved","false");
-
-
 export let scaling = 0.19;
 let poster = document.getElementById("poster");
 

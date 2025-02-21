@@ -558,10 +558,12 @@ function endDragging() {
             console.log("locked");
             motIsOn = true;
             console.log("slowing");
-            flashingLaser.style.opacity = 1;
+            fadeIn(flashingLaser,1);
+            // flashingLaser.style.opacity = 1;
             flashingLaser.style.pointerEvents = "auto";
             animateLaser();
-            p5Pngs[4].style.opacity = "1";
+            fadeIn(p5Pngs[4],1);
+            // p5Pngs[4].style.opacity = "1";
             tweezerAtomMove();
 
             // reset 1

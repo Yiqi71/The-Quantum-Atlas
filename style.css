@@ -156,73 +156,10 @@ img {
     pointer-events: none;
 }
 
-#panel1 {
+.panel {
     /* border: black solid 1pt; */
     position: absolute;
 }
-
-#panel2 {
-    /* border: black solid 1pt; */
-    position: absolute;
-    /* left: 4.5em;
-    top: 5.5em; */
-}
-
-#panel3 {
-    /* border: black solid 1pt; */
-    position: absolute;
-    /* left: 18em;
-    top: 2.5em; */
-}
-
-#panel4 {
-    /* border: black solid 1pt; */
-    position: absolute;
-}
-
-#panel5 {
-    /* border: black solid 1pt; */
-    position: absolute;
-}
-
-#panel6 {
-    /* border: black solid 1pt; */
-    position: absolute;
-}
-
-#panel7 {
-    /* border: black solid 1pt; */
-    position: absolute;
-}
-
-#panel8 {
-    /* border: black solid 1pt; */
-    position: absolute;
-}
-
-
-#puzzle1 {
-    /* border: black solid 1pt; */
-    width: 2em;
-    height: 2em;
-    transition: transform 1s ease-in-out;
-    position: absolute;
-    left: 18em;
-    top: 4em;
-    z-index: 10;
-}
-
-/* #container {
-    width: 50px;
-    height: 50px;
-    border: 1px solid black;
-    position: absolute;
-
-    left: 8.2em;
-    top: 17.8em;
-    transform: translate(-50%, -50%);
-}
-*/
 
 #circle {
     width: 50px;
