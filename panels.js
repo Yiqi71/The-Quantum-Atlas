@@ -448,12 +448,12 @@ let flashingLaserAnimaId = null;
 
 function animateLaser() {
     if (flashingLaserGrowing) {
-        flashingLaserScale += 0.025;
+        flashingLaserScale += 0.015;
         flashingLaserOpacity += 0.05;
-        if (flashingLaserScale >= 1.5) flashingLaserGrowing = false; // 达到最大尺寸后缩小
+        if (flashingLaserScale >= 1.4) flashingLaserGrowing = false; // 达到最大尺寸后缩小
     } else {
         flashingLaserScale -= 0.025;
-        flashingLaserOpacity -= 0.05;
+        flashingLaserOpacity -= 0.07;
         if (flashingLaserScale <= 1) flashingLaserGrowing = true; // 达到最小尺寸后放大
     }
 
@@ -590,7 +590,7 @@ flashingLaser.addEventListener("click", () => {
         tweezerAtomMoveAnimaId = null;
 
         cameraCanOn = true;
-    }, 1500);
+    }, 1600);
 });
 
 // 6 camera
@@ -619,11 +619,11 @@ function checkCamera() {
             if (p6Pngs[1] && p6Pngs[2]) {
                 p6Pngs[0].style.display = "none";
                 if (activeIndex === 0) {
-                    p6Pngs[1].style.display = "block";
-                    p6Pngs[2].style.display = "none";
-                } else {
                     p6Pngs[1].style.display = "none";
                     p6Pngs[2].style.display = "block";
+                } else {p6Pngs[1].style.display = "block";
+                    p6Pngs[2].style.display = "none";
+                    
                 }
                 activeIndex = 1 - activeIndex; // 在 0 和 1 之间切换
             }
