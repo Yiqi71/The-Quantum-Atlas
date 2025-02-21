@@ -152,7 +152,7 @@ img {
     position: absolute;
     top: 0;
     left: 0;
-    image-rendering: pixelated;
+    /* image-rendering: pixelated; */
     pointer-events: none;
 }
 
@@ -289,6 +289,16 @@ img {
     left: 0;
     top: 0;
     z-index: 45;
+}
+#filterM{
+    mix-blend-mode: multiply;
+    width: 100vw;
+    height: 100vh;
+}
+#filterS{
+    mix-blend-mode: screen;
+    width: 100vw;
+    height: 100vh;
 }
 
 

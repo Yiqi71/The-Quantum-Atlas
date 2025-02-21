@@ -61,8 +61,9 @@ panel3.appendChild(circleContainer);
 let p3PngNames = ["lockFill", "lockOutline", "outline", "atoms2", "atoms1", "atom2", "atom1"];
 let p3Pngs = [];
 loadPngs(document.getElementById("panel3"), "panelsImg/panel3/", p3PngNames, p3Pngs);
-p3Pngs[3].style.mixBlendMode = "lighten";
-p3Pngs[5].style.mixBlendMode = "lighten";
+p3Pngs[3].style.mixBlendMode = "color-dodge";
+p3Pngs[5].style.mixBlendMode = "color-dodge";
+console.log(p3Pngs[5].style.mixBlendMode);
 
 // 4
 let panel4 = document.getElementById("panel4");
@@ -70,7 +71,9 @@ let p4PngNames = ["lasers", "bg1", "red", "active2", "active1"];
 let p4Pngs = [];
 loadPngs(panel4, "panelsImg/panel4/", p4PngNames, p4Pngs);
 p4Pngs[1].style.mixBlendMode = "multiply";
-p4Pngs[2].style.opacity = "0.6";
+p4Pngs[2].style.mixBlendMode = "hard-light";
+p4Pngs[2].style.opacity = "0.9";
+p4Pngs[2].style.zIndex = "20";
 p4Pngs[4].style.opacity = "0";
 p4Pngs[0].style.opacity = "0";
 
@@ -113,12 +116,13 @@ for (let i = 0; i < boundary.length; i++) {
 let p6Names = ["passive", "active1", "active2", "shade"];
 let p6Pngs = [];
 loadPngs(document.getElementById("panel6"), `panelsImg/panel6/`, p6Names, p6Pngs);
+let cameraCanOn = false;
 
 // 8
 let p8PngNames = ["circle1", "circle1_border", "circle2", "atoms2", "atoms1", "entangled"];
 let p8Pngs = [];
 loadPngs(document.getElementById("panel8"), "panelsImg/panel8/", p8PngNames, p8Pngs);
-p8Pngs[0].style.mixBlendMode = "multiply";
+p8Pngs[0].style.mixBlendMode = "color-dodge";
 p8Pngs[2].style.transformOrigin = "23px 565px";
 p8Pngs[2].style.transform = "scale(0.5)";
 p8Pngs[5].style.zIndex = 40;
@@ -309,7 +313,7 @@ button.addEventListener("click", () => {
     p3Pngs[6].style.zIndex = 41;
     p2Pngs[1].style.zIndex = 141;
     laserOn = true;
-    const intervalTime = 600; // Toggle interval (ms)
+
     let active = false;
 
     if (!p1Pngs[1] || !p1Pngs[2]) return; // Ensure required elements exist
@@ -321,7 +325,7 @@ button.addEventListener("click", () => {
         active = !active;
         toggleVisibility(p1Pngs[1], active);
         toggleVisibility(p1Pngs[2], !active);
-    }, intervalTime);
+    }, 250);
     update();
 });
 
@@ -510,7 +514,7 @@ triangle.addEventListener("mouseup", () => {
 
         setTimeout(() => {
             locked = true;
-            startFlashing(p4Pngs[3], p4Pngs[4], 1000);
+            startFlashing(p4Pngs[3], p4Pngs[4], 280);
         }, 2000);
 
         setTimeout(() => {
@@ -529,6 +533,11 @@ triangle.addEventListener("mouseup", () => {
             animateLaser();
             p5Pngs[4].style.opacity = "1";
             tweezerAtomMove();
+
+            // reset 1
+            clearInterval(cameraInterval1);
+            p1Pngs[1].style.opacity = "0";
+            p1Pngs[2].style.opacity = "0";
         }, 4500);
     }
 });
@@ -546,6 +555,8 @@ flashingLaser.addEventListener("click", () => {
 
         cancelAnimationFrame(tweezerAtomMoveAnimaId);
         tweezerAtomMoveAnimaId = null;
+
+        cameraCanOn = true;
     }, 1500);
 });
 
@@ -601,17 +612,54 @@ camera.style.zIndex = 100;
 poster.appendChild(camera);
 
 
-camera.addEventListener("click", function () {
-    if (cameraStage !== "on") { // 避免重复触发
+// camera.addEventListener("click", function () {
+//     if(cameraCanOn){
+//         if (cameraStage !== "on") { // 避免重复触发
+//             cameraStage = "on";
+//             checkCamera();
+    
+//             setTimeout(() => {
+//                 cameraStage = "off";
+//                 checkCamera();
+//             }, 5000); // 5秒后切换回 "off"
+//         }
+//     }
+// })
+
+camera.addEventListener("mousedown", function () {
+    if (cameraCanOn && cameraStage !== "on") { // 避免重复触发
         cameraStage = "on";
         checkCamera();
-
-        setTimeout(() => {
-            cameraStage = "off";
-            checkCamera();
-        }, 5000); // 5秒后切换回 "off"
+        uPanels[5].style.opacity = 0;
     }
-})
+});
+
+camera.addEventListener("mouseup", function () {
+    if (cameraStage === "on") {
+        cameraStage = "off";
+        checkCamera();
+        uPanels[6].style.opacity = 0;
+    }
+});
+
+// 兼容移动端，检测触摸事件
+camera.addEventListener("touchstart", function (event) {
+    event.preventDefault(); // 防止触摸事件干扰点击
+    if (cameraCanOn && cameraStage !== "on") {
+        cameraStage = "on";
+        checkCamera();
+        uPanels[5].style.opacity = 0;
+    }
+});
+
+camera.addEventListener("touchend", function () {
+    if (cameraStage === "on") {
+        cameraStage = "off";
+        checkCamera();
+        uPanels[6].style.opacity = 0;
+    }
+});
+
 
 // 5 atom move function    
 let circleTX = 0;
