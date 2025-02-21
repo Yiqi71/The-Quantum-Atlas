@@ -542,6 +542,7 @@ flashingLaser.addEventListener("click", () => {
         flashingLaser.style.opacity = 0;
         cancelAnimationFrame(flashingLaserAnimaId);
         flashingLaserAnimaId = null;
+        p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
 
         cancelAnimationFrame(tweezerAtomMoveAnimaId);
         tweezerAtomMoveAnimaId = null;
@@ -617,17 +618,17 @@ let circleTX = 0;
 let circleTY = 0;
 let centerTX = 0;
 let centerTY = 0;
-let speedTX = 3;
+let speedTX = 2;
 let speedTY = -3;
 
 let tweezerAtomMoveAnimaId = null;
 
 function tweezerAtomMove() {
-    let aX = (centerTX - circleTX) / 140;
+    let aX = (centerTX - circleTX) / 240;
     speedTX += aX;
     circleTX += speedTX;
 
-    let aY = (centerTY - circleTY) / 110;
+    let aY = (centerTY - circleTY) / 210;
     speedTY += aY;
     circleTY += speedTY;
     let ran = 0.5 * Math.random() - 1;
@@ -635,7 +636,7 @@ function tweezerAtomMove() {
     let disU1 = pointToLineDistance(boundary[6][0], boundary[6][1], boundary[0][0], boundary[0][1], circleTX, circleTY);
     let disU2 = pointToLineDistance(boundary[1][0], boundary[1][1], boundary[0][0], boundary[0][1], circleTX, circleTY);
 
-    let disBoundary = 10;
+    let disBoundary = 15;
 
     // let boundary = [
     //     [513, 400],
@@ -653,12 +654,23 @@ function tweezerAtomMove() {
             speedTY = -3;
             console.log(circleTY);
         }
-        for (let i = boundary.length - 1; i > 2; i--) {
-            if (circleTX >= boundary[i][0] && circleTX < boundary[i - 1][0] && circleTY >= boundary[i][1] && circleTY <= boundary[i - 1][1]) {
+        for (let i = boundary.length - 1; i > 1; i--) {
+            let y1;
+            let y2;
+            if (boundary[i][1] > boundary[i - 1][1]) {
+                y2 = boundary[i][1];
+                y1 = boundary[i - 1][0];
+            } else {
+                y1 = boundary[i][1];
+                y2 = boundary[i - 1][0];
+            }
+            let x1 = boundary[i][0];
+            let x2 = boundary[i - 1][0];
+
+            if (circleTX >= x1 && circleTX < x2 && circleTY >= y1 && circleTY <= y2) {
                 let dis = pointToLineDistance(boundary[i][0], boundary[i][1], boundary[i - 1][0], boundary[i - 1][1], circleTX, circleTY);
                 if (dis <= disBoundary) {
                     speedTY = ran * speedTY * damping;
-                    speedTX = ranX * speedTX * damping;
                 }
             }
         }
@@ -669,12 +681,10 @@ function tweezerAtomMove() {
 
         if (disU1 <= disBoundary) {
             speedTY = ran * speedTY * damping;
-            speedTX = ranX * speedTX * damping;
         }
 
         if (disU2 <= disBoundary) {
             speedTY = ran * speedTY * damping;
-            speedTX = ranX * speedTX * damping;
         }
     }
 
@@ -696,7 +706,6 @@ function tweezerAtomMove() {
     // console.log(speedTX);
     tweezerAtomMoveAnimaId = requestAnimationFrame(tweezerAtomMove);
 }
-tweezerAtomMove();
 
 function pointToLineDistance(x1, y1, x2, y2, circleTX, circleTY) {
     let A = y1 - y2;
