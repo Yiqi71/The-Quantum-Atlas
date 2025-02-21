@@ -562,17 +562,14 @@ function endDragging() {
             flashingLaser.style.opacity = 1;
             flashingLaser.style.pointerEvents = "auto";
             animateLaser();
-            fadeIn(p5Pngs[4],1);
-            // p5Pngs[4].style.opacity = "1";
+            // fadeIn(p5Pngs[4],1);
+            p5Pngs[4].style.opacity = "1";
             tweezerAtomMove();
             p5Pngs[4].style.zIndex = "50";
             // reset 1
             clearInterval(cameraInterval1);
             p1Pngs[1].style.opacity = "0";
             p1Pngs[2].style.opacity = "0";
-
-            
-            
         }, 4500);
 
         setTimeout(() => {
