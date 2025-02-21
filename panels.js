@@ -558,8 +558,8 @@ function endDragging() {
             console.log("locked");
             motIsOn = true;
             console.log("slowing");
-            fadeIn(flashingLaser,1);
-            // flashingLaser.style.opacity = 1;
+            // fadeIn(flashingLaser,1);
+            flashingLaser.style.opacity = 1;
             flashingLaser.style.pointerEvents = "auto";
             animateLaser();
             fadeIn(p5Pngs[4],1);
