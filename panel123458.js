@@ -635,27 +635,12 @@ p6Pngs[3].style.display = "block";
 let camera = document.createElement("div");
 // camera.style.border = "1px solid black";
 camera.style.position = "absolute";
-camera.style.width = "80px";
-camera.style.height = "80px";
+camera.style.width = "160px";
+camera.style.height = "100px";
 camera.style.left = "300px";
 camera.style.top = "280px";
 camera.style.zIndex = 100;
 poster.appendChild(camera);
-
-
-// camera.addEventListener("click", function () {
-//     if(cameraCanOn){
-//         if (cameraStage !== "on") { // 避免重复触发
-//             cameraStage = "on";
-//             checkCamera();
-    
-//             setTimeout(() => {
-//                 cameraStage = "off";
-//                 checkCamera();
-//             }, 5000); // 5秒后切换回 "off"
-//         }
-//     }
-// })
 
 camera.addEventListener("mousedown", function () {
     if (cameraCanOn && cameraStage !== "on") { // 避免重复触发
