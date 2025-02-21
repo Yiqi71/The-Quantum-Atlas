@@ -579,7 +579,7 @@ function endDragging() {
             reflectCanvas.style.opacity = "0";
             deflectCanvas.style.opacity = "0";
             clearInterval(cameraInterval2);
-        }, 6000);
+        }, 7000);
     }
 }
 
