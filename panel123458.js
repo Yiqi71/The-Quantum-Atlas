@@ -119,13 +119,15 @@ loadPngs(document.getElementById("panel6"), `panelsImg/panel6/`, p6Names, p6Pngs
 let cameraCanOn = false;
 
 // 8
-let p8PngNames = ["circle1", "circle1_border", "circle2", "atoms2", "atoms1", "entangled"];
+let p8PngNames = ["circle2","circle1", "circle1_border",  "atoms2", "atoms1", "entangled"];
 let p8Pngs = [];
 loadPngs(document.getElementById("panel8"), "panelsImg/panel8/", p8PngNames, p8Pngs);
-p8Pngs[0].style.mixBlendMode = "color-dodge";
-p8Pngs[2].style.transformOrigin = "23px 565px";
-p8Pngs[2].style.transform = "scale(0.5)";
+p8Pngs[1].style.mixBlendMode = "multiply";
+p8Pngs[3].style.mixBlendMode = "color-dodge";
+p8Pngs[0].style.transformOrigin = "23px 565px";
+p8Pngs[0].style.transform = "scale(0.5)";
 p8Pngs[5].style.zIndex = 40;
+p8Pngs[5].style.mixBlendMode = "lighten";
 
 
 
@@ -464,35 +466,63 @@ function animateLaser() {
 let cameraInterval2 = "null";
 let triangle = document.getElementById("triangleContainer");
 
-// Drag-to-Rotate functionality
+// Drag-to-Rotate functionality for both mouse and touch
 triangle.addEventListener("mousedown", (event) => {
     if (laserOn) {
-        let dx = event.clientX - mirror2.x + mirror2.adjustX - anchor.left;
-        let dy = event.clientY - mirror2.y + mirror2.adjustY;
-
-        if (Math.sqrt(dx * dx + dy * dy) < 80) {
-            isDragging = true;
-            initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-            mouseIsDown = true;
-        }
+        startDragging(event.clientX, event.clientY);
     }
 });
 
 triangle.addEventListener("mousemove", (event) => {
     if (isDragging) {
-        let dx = event.clientX - mirror2.x + mirror2.adjustX - anchor.left;
-        let dy = event.clientY - mirror2.y + mirror2.adjustY;
-        let currentAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-        mirror2.angle = currentAngle;
-        triangle.style.transform = `rotate(${currentAngle}deg)`;
-        update();
-        initialAngle = currentAngle;
+        updateRotation(event.clientX, event.clientY);
     }
 });
 
-triangle.addEventListener("mouseup", () => {
+triangle.addEventListener("mouseup", endDragging);
+
+triangle.addEventListener("touchstart", (event) => {
+    if (laserOn) {
+        event.preventDefault(); // Prevent scrolling
+        const touch = event.touches[0];
+        startDragging(touch.clientX, touch.clientY);
+    }
+});
+
+triangle.addEventListener("touchmove", (event) => {
+    if (isDragging) {
+        const touch = event.touches[0];
+        updateRotation(touch.clientX, touch.clientY);
+    }
+});
+
+triangle.addEventListener("touchend", endDragging);
+
+function startDragging(clientX, clientY) {
+    let dx = clientX - mirror2.x + mirror2.adjustX - anchor.left;
+    let dy = clientY - mirror2.y + mirror2.adjustY;
+
+    if (Math.sqrt(dx * dx + dy * dy) < 80) {
+        isDragging = true;
+        initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+        mouseIsDown = true;
+    }
+}
+
+function updateRotation(clientX, clientY) {
+    let dx = clientX - mirror2.x + mirror2.adjustX - anchor.left;
+    let dy = clientY - mirror2.y + mirror2.adjustY;
+    let currentAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+    mirror2.angle = currentAngle;
+    triangle.style.transform = `rotate(${currentAngle}deg)`;
+    update();
+    initialAngle = currentAngle;
+}
+
+function endDragging() {
     isDragging = false;
     mouseIsDown = false;
+
     if (mirror2.angle > 52 && mirror2.angle < 57) {
         uPanels[1].style.opacity = "0";
         uPanels[2].style.opacity = "0";
@@ -508,7 +538,7 @@ triangle.addEventListener("mouseup", () => {
         setTimeout(() => {
             applyTransform(p3Pngs[5], atomDX, atomDY, 3);
             applyTransform(p3Pngs[6], atomDX, atomDY, 3);
-            applyScale(p8Pngs[2], 1, 4);
+            applyScale(p8Pngs[0], 1, 4);
             rotateCircles();
         }, 500);
 
@@ -540,7 +570,8 @@ triangle.addEventListener("mouseup", () => {
             p1Pngs[2].style.opacity = "0";
         }, 4500);
     }
-});
+}
+
 
 flashingLaser.addEventListener("click", () => {
     console.log("tweezerOn!");

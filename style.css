@@ -152,7 +152,7 @@ img {
     position: absolute;
     top: 0;
     left: 0;
-    /* image-rendering: pixelated; */
+    image-rendering: pixelated;
     pointer-events: none;
 }
 
