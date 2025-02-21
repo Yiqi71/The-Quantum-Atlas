@@ -26,7 +26,8 @@ p1Pngs[3].style.zIndex = 41;
 let p2PngNames = ["backg", "bg1"];
 let p2Pngs = [];
 loadPngs(document.getElementById("panel2"), "panelsImg/panel2/", p2PngNames, p2Pngs);
-// p2Pngs[0].style.zIndex = 21;
+p2Pngs[0].style.zIndex = 41;
+p2Pngs[1].style.zIndex = 42;
 
 // 3
 let panel3 = document.getElementById(`panel3`);
@@ -92,7 +93,21 @@ p5Pngs[1].style.transition = "clip-path 2s linear";
 p5Pngs[1].style.zIndex = "50";
 p5Pngs[4].style.left = "260px";
 p5Pngs[4].style.top = "480px";
+// p5Pngs[4].style.opacity = "0";
 // p5Pngs[4].style.zIndex = "50";
+let boundary = [
+    [513, 400],
+    [565, 436],
+    [545, 487],
+    [512, 502],
+    [509, 537],
+    [436, 573],
+    [407, 556]
+];
+for (let i = 0; i < boundary.length; i++) {
+    boundary[i][0] -= 497;
+    boundary[i][1] -= 486;
+}
 
 // 6
 let p6Names = ["passive", "active1", "active2", "shade"];
@@ -420,6 +435,28 @@ if (locked == false) {
 
 let flashingLaser = document.getElementById("flashingLaser");
 
+let flashingLaserScale = 1;
+let flashingLaserOpacity = 0;
+let flashingLaserGrowing = true; // 控制大小变化
+let flashingLaserAnimaId = null;
+
+function animateLaser() {
+    if (flashingLaserGrowing) {
+        flashingLaserScale += 0.025;
+        flashingLaserOpacity += 0.05;
+        if (flashingLaserScale >= 1.5) flashingLaserGrowing = false; // 达到最大尺寸后缩小
+    } else {
+        flashingLaserScale -= 0.025;
+        flashingLaserOpacity -= 0.05;
+        if (flashingLaserScale <= 1) flashingLaserGrowing = true; // 达到最小尺寸后放大
+    }
+
+    flashingLaser.style.transform = `scale(${flashingLaserScale})`;
+    flashingLaser.style.opacity = flashingLaserOpacity;
+
+    flashingLaserAnimaId = requestAnimationFrame(animateLaser); // 递归调用
+}
+
 let cameraInterval2 = "null";
 let triangle = document.getElementById("triangleContainer");
 
@@ -489,7 +526,9 @@ triangle.addEventListener("mouseup", () => {
             console.log("slowing");
             flashingLaser.style.opacity = 1;
             flashingLaser.style.pointerEvents = "auto";
-
+            animateLaser();
+            p5Pngs[4].style.opacity = "1";
+            tweezerAtomMove();
         }, 4500);
     }
 });
@@ -499,11 +538,14 @@ flashingLaser.addEventListener("click", () => {
     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
     setTimeout(() => {
         uPanels[4].style.opacity = 0;
-    }, 2000);
 
-    // setTimeout(() => {
-    //     window.tweezerOn = true; // 图片完全出现后设置 tweezerOn = true
-    // }, 2000); // 2秒后执行
+        flashingLaser.style.opacity = 0;
+        cancelAnimationFrame(flashingLaserAnimaId);
+        flashingLaserAnimaId = null;
+
+        cancelAnimationFrame(tweezerAtomMoveAnimaId);
+        tweezerAtomMoveAnimaId = null;
+    }, 1500);
 });
 
 // 6 camera
@@ -569,6 +611,101 @@ camera.addEventListener("click", function () {
         }, 5000); // 5秒后切换回 "off"
     }
 })
+
+// 5 atom move function    
+let circleTX = 0;
+let circleTY = 0;
+let centerTX = 0;
+let centerTY = 0;
+let speedTX = 3;
+let speedTY = -3;
+
+let tweezerAtomMoveAnimaId = null;
+
+function tweezerAtomMove() {
+    let aX = (centerTX - circleTX) / 140;
+    speedTX += aX;
+    circleTX += speedTX;
+
+    let aY = (centerTY - circleTY) / 110;
+    speedTY += aY;
+    circleTY += speedTY;
+    let ran = 0.5 * Math.random() - 1;
+    let ranX = 0.8 * Math.random() - 1.1;
+    let disU1 = pointToLineDistance(boundary[6][0], boundary[6][1], boundary[0][0], boundary[0][1], circleTX, circleTY);
+    let disU2 = pointToLineDistance(boundary[1][0], boundary[1][1], boundary[0][0], boundary[0][1], circleTX, circleTY);
+
+    let disBoundary = 10;
+
+    // let boundary = [
+    //     [513, 400],
+    //     [565, 436],
+    //     [545, 487],
+    //     [512, 502],
+    //     [509, 537],
+    //     [436, 573],
+    //     [407, 556]
+    // ];
+
+
+    if (speedTY > 0) {
+        if (circleTY > boundary[5][1]) {
+            speedTY = -3;
+            console.log(circleTY);
+        }
+        for (let i = boundary.length - 1; i > 2; i--) {
+            if (circleTX >= boundary[i][0] && circleTX < boundary[i - 1][0] && circleTY >= boundary[i][1] && circleTY <= boundary[i - 1][1]) {
+                let dis = pointToLineDistance(boundary[i][0], boundary[i][1], boundary[i - 1][0], boundary[i - 1][1], circleTX, circleTY);
+                if (dis <= disBoundary) {
+                    speedTY = ran * speedTY * damping;
+                    speedTX = ranX * speedTX * damping;
+                }
+            }
+        }
+    } else {
+        if (circleTY < boundary[0][1]) {
+            speedTY = 3;
+        }
+
+        if (disU1 <= disBoundary) {
+            speedTY = ran * speedTY * damping;
+            speedTX = ranX * speedTX * damping;
+        }
+
+        if (disU2 <= disBoundary) {
+            speedTY = ran * speedTY * damping;
+            speedTX = ranX * speedTX * damping;
+        }
+    }
+
+    if (speedTX > 0) {
+        if (circleTX > boundary[1][0]) {
+            speedTX = -3;
+            // console.log("Jump1");
+            // console.log(circleTX);
+        }
+    } else {
+        if (circleTX < boundary[6][0]) {
+            speedTX = 3;
+        }
+
+    }
+    p5Pngs[4].style.transform = `rotate(${angle4}deg)`;
+    p5Pngs[4].style.transform = (`translate(${circleTX}px, ${circleTY}px)`);
+    // console.log(circleTX);
+    // console.log(speedTX);
+    tweezerAtomMoveAnimaId = requestAnimationFrame(tweezerAtomMove);
+}
+tweezerAtomMove();
+
+function pointToLineDistance(x1, y1, x2, y2, circleTX, circleTY) {
+    let A = y1 - y2;
+    let B = x2 - x1;
+    let C = (x1) * (y2) - (x2) * (y1);
+
+    let distance = Math.abs(A * circleTX + B * circleTY + C) / Math.sqrt(A * A + B * B);
+    return distance;
+}
 
 /** Helper function for setting element visibility **/
 function toggleVisibility(element, isVisible) {
