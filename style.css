@@ -154,7 +154,7 @@ body {
 img {
     position: absolute;
     left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) - 50%);
     transform: scale(var(--scale));
     /* image-rendering: pixelated; */
     pointer-events: none;
@@ -164,7 +164,7 @@ img {
     /* border: black solid 1pt; */
     position: absolute;
         left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) - 50%);
     transform: scale(var(--scale));
 }
 
@@ -172,7 +172,7 @@ img {
     width: 50px;
     height: 50px;
         left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) - 50%);
     transform: scale(var(--scale));
     border-radius: 50%;
     position: absolute;
@@ -181,7 +181,7 @@ img {
 #reflectCanvas {
     position: absolute;
     left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) - 50%);
     transform: scale(var(--scale));
     /* border: 3px solid black; */
     z-index: 40;
@@ -190,7 +190,7 @@ img {
 #mirror {
     z-index: 90;
         left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) - 50%);
     transform: scale(var(--scale));
     /* Ensure it's on top */
     position: absolute;
@@ -202,7 +202,7 @@ img {
     width: 50px;
     height: 50px;
         left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) - 50%);
     transform: scale(var(--scale));
     z-index: 8000;
 }
@@ -210,7 +210,7 @@ img {
 #triangleContainer{
     position:absolute;
         left: calc(var(--posX) + 176px);
-    top: calc(var(--posY) + 76px);
+    top: calc(var(--posY) + (76px - 50vh)); 
     transform: scale(var(--scale));
     width:60px;
     height:60px;
@@ -223,7 +223,7 @@ img {
     position: absolute;
     background-color: aqua;
         left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) + (0px - 50vh)); 
     transform: scale(var(--scale));
     width: 24px;
     height: 25px;
@@ -235,7 +235,7 @@ img {
     width:15px;
     height:15px;
         left: calc(var(--posX) + 396px);
-    top: calc(var(--posY) + 248px);
+    top: calc(var(--posY) + (248px - 50vh)); 
     transform: scale(var(--scale));
     z-index: 999;
     border-radius: 5px;
@@ -246,14 +246,14 @@ img {
 #deflectCanvas{
     position: absolute;
     left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) + (0px - 50vh)); 
     transform: scale(var(--scale));
     z-index: 45;
 }
 #filterM{
     mix-blend-mode: multiply;
         left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) + (0px - 50vh)); 
     transform: scale(var(--scale));
     width: 100vw;
     height: 100vh;
@@ -261,7 +261,7 @@ img {
 #filterS{
     mix-blend-mode: screen;
         left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) + (0px - 50vh)); 
     transform: scale(var(--scale));
     width: 100vw;
     height: 100vh;
@@ -272,7 +272,7 @@ img {
         width: 600px;
         height: 700px;
             left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) + (0px - 50vh)); 
     transform: scale(var(--scale));
         margin: 0 auto;
         position: relative;
@@ -285,7 +285,7 @@ img {
         width: 600px;
         height: 700px;
             left: calc(var(--posX) + 0px);
-    top: calc(var(--posY) + 0px);
+    top: calc(var(--posY) + (0px - 50vh)); 
     transform: scale(var(--scale));
         margin: 0 auto;
         position: relative;
