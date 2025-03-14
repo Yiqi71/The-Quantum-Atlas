@@ -1,259 +1,62 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-}
-
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-    display: block;
-}
-
+/* Center everything in the viewport */
 body {
-    line-height: 1;
-}
-
-ol,
-ul {
-    list-style: none;
-}
-
-blockquote,
-q {
-    quotes: none;
-}
-
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-    content: '';
-    content: none;
-}
-
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-
-
-
-/* below */
-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
     background-color: #ffefe2;
     background-image: url('panelsImg/Noise.png');
-    /* 背景图 */
     background-size: cover;
-    /* 确保背景图铺满 */
     background-position: center;
-    /* 居中显示 */
+    position: relative; /* Needed for absolute-positioned children */
 }
 
-img {
+/* Shift all absolute elements slightly to the right */
+.panel,
+img,
+#circle,
+#reflectCanvas,
+#mirror,
+.fakeButton,
+#triangleContainer,
+#flashingLaser,
+#deflectCanvas {
     position: absolute;
-    top: 0;
-    left: 0;
-    /* image-rendering: pixelated; */
-    pointer-events: none;
+    left: calc(50% + 50px); /* Shifted 50px to the right from the center */
+    transform: translateX(-50%); /* Keep elements centered */
 }
 
-.panel {
-    /* border: black solid 1pt; */
-    position: absolute;
+#triangleContainer {
+    top: 50%; 
+    transform: translate(-50%, -50%); /* Center both horizontally and vertically */
 }
 
-#circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    position: absolute;
+#flashingLaser {
+    top: 50%;
+    left: calc(50% + 100px); /* Shifted further to the right */
+    transform: translate(-50%, -50%);
 }
 
-#reflectCanvas {
+/* Adjust full-screen filters */
+#filterM, #filterS {
     position: absolute;
-    left: 0;
-    top: 0;
-    /* border: 3px solid black; */
-    z-index: 40;
-}
-
-#mirror {
-    z-index: 90;
-    /* Ensure it's on top */
-    position: absolute;
-}
-
-.fakeButton {
-    position: absolute;
-    /* border: 1px solid black; */
-    width: 50px;
-    height: 50px;
-    z-index: 8000;
-}
-
-#triangleContainer{
-    position:absolute;
-    left: 176px;
-    top: 76px;
-    width:60px;
-    height:60px;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#triangle {
-    position: absolute;
-    background-color: aqua;
-    width: 24px;
-    height: 25px;
-    clip-path: polygon(70% 10%, 0% 80%, 100% 100%);
-}
-#flashingLaser{
-    position:absolute;
-    opacity:0;
-    width:15px;
-    height:15px;
-    left:396px;
-    top:248px;
-    z-index: 999;
-    border-radius: 5px;
-    background-color: rgb(224, 176, 255);
-    filter:blur(2px);
-    pointer-events: none;
-}
-#deflectCanvas{
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 45;
-}
-#filterM{
     mix-blend-mode: multiply;
     width: 100vw;
     height: 100vh;
 }
-#filterS{
-    mix-blend-mode: screen;
-    width: 100vw;
-    height: 100vh;
+
+/* Keep poster centered in all screen sizes */
+#poster {
+    width: 600px;
+    height: 700px;
+    position: relative;
+    margin: auto;
 }
 
-
-@media(max-width: 600px) {
+/* Ensure responsiveness */
+@media (max-width: 600px) {
     #poster {
-        width: 600px;
-        height: 700px;
-        margin: 0 auto;
-        position: relative;
-    }
-
-}
-
-@media(min-width: 601px) {
-    #poster {
-        width: 600px;
-        height: 700px;
-        margin: 0 auto;
-        position: relative;
+        width: 100%;
+        height: auto;
     }
 }
