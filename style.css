@@ -1,17 +1,12 @@
-/* Center everything in the viewport */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Full viewport height */
-    background-color: #ffefe2;
-    background-image: url('panelsImg/Noise.png');
-    background-size: cover;
-    background-position: center;
-    position: relative; /* Needed for absolute-positioned children */
+/* Wrap everything inside a centered container */
+#wrapper {
+    position: absolute;
+    top: 50%;
+    left: 55%;  /* Shifted slightly right */
+    transform: translate(-50%, -50%);
 }
 
-/* Shift all absolute elements slightly to the right */
+/* Preserve existing absolute positions for components */
 .panel,
 img,
 #circle,
@@ -22,41 +17,35 @@ img,
 #flashingLaser,
 #deflectCanvas {
     position: absolute;
-    left: calc(50% + 50px); /* Shifted 50px to the right from the center */
-    transform: translateX(-50%); /* Keep elements centered */
 }
 
-#triangleContainer {
-    top: 50%; 
-    transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+/* Background settings */
+body {
+    background-color: #ffefe2;
+    background-image: url('panelsImg/Noise.png');
+    background-size: cover;
+    background-position: center;
 }
 
-#flashingLaser {
-    top: 50%;
-    left: calc(50% + 100px); /* Shifted further to the right */
-    transform: translate(-50%, -50%);
-}
-
-/* Adjust full-screen filters */
+/* Full-screen filters */
 #filterM, #filterS {
-    position: absolute;
     mix-blend-mode: multiply;
     width: 100vw;
     height: 100vh;
 }
 
-/* Keep poster centered in all screen sizes */
-#poster {
-    width: 600px;
-    height: 700px;
-    position: relative;
-    margin: auto;
-}
-
-/* Ensure responsiveness */
+/* Ensure the poster is centered in responsive layouts */
 @media (max-width: 600px) {
     #poster {
         width: 100%;
         height: auto;
+    }
+}
+
+@media (min-width: 601px) {
+    #poster {
+        width: 600px;
+        height: 700px;
+        margin: auto;
     }
 }
