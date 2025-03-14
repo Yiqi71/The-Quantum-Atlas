@@ -94,7 +94,7 @@ video {
 
 :root {
     --posX: 0px;  /* Adjust X position */
-    --posY: 50vh;  /* Adjust Y position */
+    --posY: 300px;  /* Adjust Y position */
     --scale: 1;   /* Adjust scaling */
 }
 
