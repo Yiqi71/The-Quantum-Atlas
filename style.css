@@ -93,8 +93,8 @@ vertical-align: baseline;
 }
 
 :root {
---posX: 50px;  /* Adjust X position */
-    --posY: 120px;  /* Adjust Y position */
+--posX: 0px;  /* Adjust X position */
+    --posY: 0px;  /* Adjust Y position */
 --scale: 1.27;   /* Adjust scaling */
 }
 
