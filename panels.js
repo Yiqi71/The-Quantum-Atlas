@@ -91,10 +91,11 @@ let p5Names = ["purple", "laser", "bed2", "bed1", "atom"];
 let p5Pngs = [];
 loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs);
 p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
-// p5Pngs[1].style.transition = "clip-path 2s linear";
+
 p5Pngs[1].style.zIndex = "50";
 p5Pngs[4].style.left = "260px";
 p5Pngs[4].style.top = "480px";
+
 // p5Pngs[4].style.opacity = "0";
 // p5Pngs[4].style.zIndex = "50";
 let boundary = [
@@ -115,7 +116,7 @@ for (let i = 0; i < boundary.length; i++) {
 let p6Names = ["passive", "active1", "active2", "shade"];
 let p6Pngs = [];
 loadPngs(document.getElementById("panel6"), `panelsImg/panel6/`, p6Names, p6Pngs);
-let cameraCanOn = true;
+let cameraCanOn = false;
 
 // 8
 let p8PngNames = ["circle2","circle1", "circle1_border",  "atoms2", "atoms1", "entangled"];
@@ -295,7 +296,6 @@ function update() {
 }
 
 let initialAngle = 0;
-let mouseIsDown = false;
 
 
 // button1 - shoot laser
@@ -431,7 +431,6 @@ function rotateCircles() {
 // lock animation
 let atomDX = -23;
 let atomDY = -26;
-let lockStart = false;
 let locked = false;
 
 if (locked == false) {
@@ -478,16 +477,15 @@ function startDragging(clientX, clientY) {
     let dx = clientX - mirror2.x + mirror2.adjustX - anchor.left;
     let dy = clientY - mirror2.y + mirror2.adjustY;
 
-    if (Math.sqrt(dx * dx + dy * dy) < 80) {
-        isDragging = true;
-        initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-        mouseIsDown = true;
-    }
+    isDragging = true;
+    initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+    // if (Math.sqrt(dx * dx + dy * dy) < 80) {
+    // }
 }
 
-function updateRotation(clientX, clientY) {
-    let dx = clientX - mirror2.x + mirror2.adjustX - anchor.left;
-    let dy = clientY - mirror2.y + mirror2.adjustY;
+function updateRotation(startX, startY) {
+    let dx = startX - mirror2.x + mirror2.adjustX - anchor.left;
+    let dy = startY - mirror2.y + mirror2.adjustY;
     let currentAngle = Math.atan2(dy, dx) * (180 / Math.PI);
     mirror2.angle = currentAngle;
     triangle.style.transform = `rotate(${currentAngle}deg)`;
@@ -497,7 +495,6 @@ function updateRotation(clientX, clientY) {
 
 function endDragging() {
     isDragging = false;
-    mouseIsDown = false;
 
     if (mirror2.angle > 52 && mirror2.angle < 57) {
         uPanels[1].style.opacity = "0";
@@ -508,7 +505,6 @@ function endDragging() {
 
         if (locked) return; // Exit if already locked
 
-        lockStart = true;
         console.log("lockStart");
 
         setTimeout(() => {
@@ -625,8 +621,10 @@ flashingLaser.addEventListener("mousemove", (e) => {
 flashingLaser.addEventListener("mouseup", () => {
     if (flashingIsDragging) {
     flashingIsDragging = false;
-    console.log(flashingStartX, flashingStartY);
-    if(flashingStartX>335 && flashingStartY<445){
+    let left = flashingLaser.offsetLeft;
+    let top = flashingLaser.offsetTop;
+    console.log(left, top);
+    if(left<320 && top>437){
         turnOnTweezer();
     }
     }
@@ -635,14 +633,17 @@ flashingLaser.addEventListener("mouseup", () => {
 
 function turnOnTweezer(){
     console.log("tweezerOn!");
+    uPanels[4].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)";
+    uPanels[4].style.transition = "clip-path 2s linear";
+    setTimeout(() => {
+        uPanels[4].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
+    },100);
 //     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
     setTimeout(() => {
-        uPanels[4].style.opacity = 0;
-
         flashingLaser.style.opacity = 0;
         cancelAnimationFrame(flashingLaserAnimaId);
         flashingLaserAnimaId = null;
-        p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
+        // p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
 
         cancelAnimationFrame(tweezerAtomMoveAnimaId);
         tweezerAtomMoveAnimaId = null;
@@ -650,24 +651,6 @@ function turnOnTweezer(){
         cameraCanOn = true;
     }, 1600);
 }
-
-// flashingLaser.addEventListener("click", () => {
-//     console.log("tweezerOn!");
-//     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
-//     setTimeout(() => {
-//         uPanels[4].style.opacity = 0;
-
-//         flashingLaser.style.opacity = 0;
-//         cancelAnimationFrame(flashingLaserAnimaId);
-//         flashingLaserAnimaId = null;
-//         p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
-
-//         cancelAnimationFrame(tweezerAtomMoveAnimaId);
-//         tweezerAtomMoveAnimaId = null;
-
-//         cameraCanOn = true;
-//     }, 1600);
-// });
 
 // 6 camera
 let cameraStage = "off";
