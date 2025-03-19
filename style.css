@@ -95,7 +95,7 @@ vertical-align: baseline;
 :root {
 --posX: 0px;  /* Adjust X position */
     --posY: 0px;  /* Adjust Y position */
---scale: 1.27;   /* Adjust scaling */
+--scale: 1;   /* Adjust scaling */
 }
 
 /* HTML5 display-role reset for older browsers */
