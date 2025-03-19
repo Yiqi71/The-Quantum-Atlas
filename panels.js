@@ -611,6 +611,13 @@ flashingLaser.addEventListener("mousemove", (e) => {
         // 更新图片的位置
         flashingLaser.style.left = `${newPositionX}px`;
         flashingLaser.style.top = `${newPositionY}px`;
+
+        // 计算图片的上顶点和下顶点
+        let top = p5Pngs[1].offsetTop;
+        let bottom = top + p5Pngs[1].offsetHeight;
+
+        let showPurple =  Math.max(0, Math.min(100, ((e.clientY - top) / (bottom - top)) * 100));
+        p5Pngs[1].style.clipPath = `polygon(0 0, 100% 0, 100% ${showPurple}%, 0 ${showPurple}%)`;
     }
 });
 
@@ -629,19 +636,19 @@ flashingLaser.addEventListener("mouseup", () => {
 function turnOnTweezer(){
     console.log("tweezerOn!");
 //     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
-//     setTimeout(() => {
-//         uPanels[4].style.opacity = 0;
+    setTimeout(() => {
+        uPanels[4].style.opacity = 0;
 
-//         flashingLaser.style.opacity = 0;
-//         cancelAnimationFrame(flashingLaserAnimaId);
-//         flashingLaserAnimaId = null;
-//         p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
+        flashingLaser.style.opacity = 0;
+        cancelAnimationFrame(flashingLaserAnimaId);
+        flashingLaserAnimaId = null;
+        p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
 
-//         cancelAnimationFrame(tweezerAtomMoveAnimaId);
-//         tweezerAtomMoveAnimaId = null;
+        cancelAnimationFrame(tweezerAtomMoveAnimaId);
+        tweezerAtomMoveAnimaId = null;
 
-//         cameraCanOn = true;
-//     }, 1600);
+        cameraCanOn = true;
+    }, 1600);
 }
 
 // flashingLaser.addEventListener("click", () => {
