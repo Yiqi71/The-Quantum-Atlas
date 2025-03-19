@@ -91,7 +91,7 @@ let p5Names = ["purple", "laser", "bed2", "bed1", "atom"];
 let p5Pngs = [];
 loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs);
 p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
-p5Pngs[1].style.transition = "clip-path 2s linear";
+// p5Pngs[1].style.transition = "clip-path 2s linear";
 p5Pngs[1].style.zIndex = "50";
 p5Pngs[4].style.left = "260px";
 p5Pngs[4].style.top = "480px";
@@ -558,7 +558,7 @@ function endDragging() {
 
 // purple flashing laser
 let flashingLaser = document.getElementById("flashingLaser");
-
+//p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
 let flashingLaserScale = 1;
 let flashingLaserOpacity = 0;
 let flashingLaserGrowing = true; // 控制大小变化
