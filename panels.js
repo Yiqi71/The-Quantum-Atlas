@@ -63,7 +63,6 @@ let p3Pngs = [];
 loadPngs(document.getElementById("panel3"), "panelsImg/panel3/", p3PngNames, p3Pngs);
 p3Pngs[3].style.mixBlendMode = "color-dodge";
 p3Pngs[5].style.mixBlendMode = "color-dodge";
-console.log(p3Pngs[5].style.mixBlendMode);
 
 // 4
 let panel4 = document.getElementById("panel4");
@@ -116,7 +115,7 @@ for (let i = 0; i < boundary.length; i++) {
 let p6Names = ["passive", "active1", "active2", "shade"];
 let p6Pngs = [];
 loadPngs(document.getElementById("panel6"), `panelsImg/panel6/`, p6Names, p6Pngs);
-let cameraCanOn = false;
+let cameraCanOn = true;
 
 // 8
 let p8PngNames = ["circle2","circle1", "circle1_border",  "atoms2", "atoms1", "entangled"];
@@ -439,29 +438,6 @@ if (locked == false) {
     p8Pngs[5].style.opacity = "0";
 }
 
-let flashingLaser = document.getElementById("flashingLaser");
-
-let flashingLaserScale = 1;
-let flashingLaserOpacity = 0;
-let flashingLaserGrowing = true; // 控制大小变化
-let flashingLaserAnimaId = null;
-
-function animateLaser() {
-    if (flashingLaserGrowing) {
-        flashingLaserScale += 0.015;
-        flashingLaserOpacity += 0.05;
-        if (flashingLaserScale >= 1.4) flashingLaserGrowing = false; // 达到最大尺寸后缩小
-    } else {
-        flashingLaserScale -= 0.025;
-        flashingLaserOpacity -= 0.07;
-        if (flashingLaserScale <= 1) flashingLaserGrowing = true; // 达到最小尺寸后放大
-    }
-
-    flashingLaser.style.transform = `scale(${flashingLaserScale})`;
-    flashingLaser.style.opacity = flashingLaserOpacity;
-
-    flashingLaserAnimaId = requestAnimationFrame(animateLaser); // 递归调用
-}
 
 let cameraInterval2 = "null";
 let triangle = document.getElementById("triangleContainer");
@@ -580,41 +556,132 @@ function endDragging() {
     }
 }
 
+// purple flashing laser
+let flashingLaser = document.getElementById("flashingLaser");
 
-flashingLaser.addEventListener("click", () => {
-    console.log("tweezerOn!");
-    p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
-    setTimeout(() => {
-        uPanels[4].style.opacity = 0;
+let flashingLaserScale = 1;
+let flashingLaserOpacity = 0;
+let flashingLaserGrowing = true; // 控制大小变化
+let flashingLaserAnimaId = null;
 
-        flashingLaser.style.opacity = 0;
-        cancelAnimationFrame(flashingLaserAnimaId);
-        flashingLaserAnimaId = null;
-        p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
+let flashingIsDragging = false;
+let flashingStartX = 0;
+let flashingDragStartX = 0;
+let flashingStartY = 0;
+let flashingDragStartY = 0;
 
-        cancelAnimationFrame(tweezerAtomMoveAnimaId);
-        tweezerAtomMoveAnimaId = null;
+function animateLaser() {
+    if (flashingLaserGrowing) {
+        flashingLaserScale += 0.015;
+        flashingLaserOpacity += 0.05;
+        if (flashingLaserScale >= 1.4) flashingLaserGrowing = false; // 达到最大尺寸后缩小
+    } else {
+        flashingLaserScale -= 0.025;
+        flashingLaserOpacity -= 0.07;
+        if (flashingLaserScale <= 1) flashingLaserGrowing = true; // 达到最小尺寸后放大
+    }
 
-        cameraCanOn = true;
-    }, 1600);
+    flashingLaser.style.transform = `scale(${flashingLaserScale})`;
+    flashingLaser.style.opacity = flashingLaserOpacity;
+
+    flashingLaserAnimaId = requestAnimationFrame(animateLaser); // 递归调用
+}
+
+// 鼠标按下事件，开始拖动
+flashingLaser.addEventListener("mousedown", (e) => {
+    flashingIsDragging = true;
+    flashingStartX = e.clientX;
+    flashingStartY = e.clientY; // 获取鼠标按下时的水平位置
+    flashingDragStartX = flashingLaser.offsetLeft;
+    flashingDragStartY = flashingLaser.offsetTop; // 获取图片当前的水平位置
+    e.preventDefault(); // 防止选中文本等默认行为
 });
+
+// 鼠标移动事件，拖动时更新图片位置
+flashingLaser.addEventListener("mousemove", (e) => {
+    if (flashingIsDragging) {
+        // 计算鼠标在水平和垂直方向的移动距离
+        let deltaX = e.clientX - flashingStartX;
+        let deltaY = e.clientY - flashingStartY;
+        
+        // 计算新的图片位置
+        let newPositionX = flashingDragStartX + deltaX;
+        let newPositionY = flashingDragStartY + deltaY;
+
+        // 更新图片的位置
+        flashingLaser.style.left = `${newPositionX}px`;
+        flashingLaser.style.top = `${newPositionY}px`;
+    }
+});
+
+// 鼠标松开事件，停止拖动
+flashingLaser.addEventListener("mouseup", () => {
+    if (flashingIsDragging) {
+    flashingIsDragging = false;
+    console.log(flashingStartX, flashingStartY);
+    if(flashingStartX>335 && flashingStartY<445){
+        turnOnTweezer();
+    }
+    }
+});
+
+
+function turnOnTweezer(){
+    console.log("tweezerOn!");
+//     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
+//     setTimeout(() => {
+//         uPanels[4].style.opacity = 0;
+
+//         flashingLaser.style.opacity = 0;
+//         cancelAnimationFrame(flashingLaserAnimaId);
+//         flashingLaserAnimaId = null;
+//         p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
+
+//         cancelAnimationFrame(tweezerAtomMoveAnimaId);
+//         tweezerAtomMoveAnimaId = null;
+
+//         cameraCanOn = true;
+//     }, 1600);
+}
+
+// flashingLaser.addEventListener("click", () => {
+//     console.log("tweezerOn!");
+//     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
+//     setTimeout(() => {
+//         uPanels[4].style.opacity = 0;
+
+//         flashingLaser.style.opacity = 0;
+//         cancelAnimationFrame(flashingLaserAnimaId);
+//         flashingLaserAnimaId = null;
+//         p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
+
+//         cancelAnimationFrame(tweezerAtomMoveAnimaId);
+//         tweezerAtomMoveAnimaId = null;
+
+//         cameraCanOn = true;
+//     }, 1600);
+// });
 
 // 6 camera
 let cameraStage = "off";
 let cameraInterval = null;
+let finishGame = false;
 
 function checkCamera() {
     if (cameraStage == "off") {
         p6Pngs[0].style.display = "block";
         p6Pngs[1].style.display = "none";
         p6Pngs[2].style.display = "none";
+        if(!finishGame){
+            uPanels[5].style.opacity = 0.6;
+        }
         if (cameraInterval) {
             clearInterval(cameraInterval);
             cameraInterval = null; // 避免多次 clear
         }
 
     } else {
-
+        uPanels[5].style.opacity = 0;
         let activeIndex = 0; // 控制切换
         let intervalTime = 280; // 交替时间（毫秒）
 
@@ -650,11 +717,32 @@ camera.style.top = "280px";
 camera.style.zIndex = 100;
 poster.appendChild(camera);
 
+
+let cameraHoldStart = 0;
+let titleAnimationFrame;
+let titleProgress = 0;
+const holdDuration = 7000; // 2秒完全消失
+
+function animatePanel() {
+    const elapsed = Date.now() - cameraHoldStart;
+    titleProgress = Math.min(elapsed / holdDuration, 1);
+    
+    // 计算剪切蒙版位置，从100%逐渐减少到0%
+    uPanels[6].style.clipPath = `inset( 0% 0% ${ titleProgress * 100}% 0%)`;
+
+    if (titleProgress < 0.4) {
+        titleAnimationFrame = requestAnimationFrame(animatePanel);
+    } else {
+        finishGame = true;
+    }
+}
+
 camera.addEventListener("mousedown", function () {
-    if (cameraCanOn && cameraStage !== "on") { // 避免重复触发
+    if (cameraCanOn && cameraStage !== "on") {
         cameraStage = "on";
         checkCamera();
-        uPanels[5].style.opacity = 0;
+        cameraHoldStart = Date.now();
+        titleAnimationFrame = requestAnimationFrame(animatePanel);
     }
 });
 
@@ -662,9 +750,14 @@ camera.addEventListener("mouseup", function () {
     if (cameraStage === "on") {
         cameraStage = "off";
         checkCamera();
-        uPanels[6].style.opacity = 0;
+        cancelAnimationFrame(titleAnimationFrame);
+        if(!finishGame){
+            uPanels[6].style.clipPath = "inset(0% 0% 0% 0%)"; // 重置蒙版
+        }
+        
     }
 });
+
 
 // 兼容移动端，检测触摸事件
 camera.addEventListener("touchstart", function (event) {
@@ -672,7 +765,8 @@ camera.addEventListener("touchstart", function (event) {
     if (cameraCanOn && cameraStage !== "on") {
         cameraStage = "on";
         checkCamera();
-        uPanels[5].style.opacity = 0;
+        cameraHoldStart = Date.now();
+        titleAnimationFrame = requestAnimationFrame(animatePanel);
     }
 });
 
@@ -680,7 +774,10 @@ camera.addEventListener("touchend", function () {
     if (cameraStage === "on") {
         cameraStage = "off";
         checkCamera();
-        uPanels[6].style.opacity = 0;
+        cancelAnimationFrame(titleAnimationFrame);
+        if(!finishGame){
+            uPanels[6].style.clipPath = "inset(0% 0% 0% 0%)"; // 重置蒙版
+        }
     }
 });
 
@@ -787,6 +884,7 @@ function pointToLineDistance(x1, y1, x2, y2, circleTX, circleTY) {
     let distance = Math.abs(A * circleTX + B * circleTY + C) / Math.sqrt(A * A + B * B);
     return distance;
 }
+
 
 /** Helper function for setting element visibility **/
 function toggleVisibility(element, isVisible) {
