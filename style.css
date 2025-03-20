@@ -195,7 +195,7 @@ img {
 }
 #triangle {
     position: absolute;
-    background-color: aqua;
+    background-color: rgb(53,128,239);
     clip-path: polygon(70% 10%, 0% 80%, 100% 100%);
 }
 #prism{
