@@ -351,12 +351,12 @@ let speedY = -5;
 let damping = 0.99;
 
 function moveCircle(r) {
-    let aX = (centerX - circleX) / 140;
+    let aX = (centerX - circleX) / (140*scaling/0.19);
     speedX += aX;
     // speedX *= damping;
     circleX += speedX;
 
-    let aY = (centerY - circleY) / 110;
+    let aY = (centerY - circleY) / (110*scaling/0.19);
     speedY += aY;
     // speedY *= damping;
     circleY += speedY;
@@ -435,8 +435,8 @@ function rotateCircles() {
 
 
 // lock animation
-let atomDX = -23;
-let atomDY = -26;
+let atomDX = -23*scaling/0.19;
+let atomDY = -26*scaling/0.19;
 let locked = false;
 
 if (locked == false) {
@@ -459,7 +459,7 @@ triangleShape.style.height = `${scaling*25/0.19}px`;
 // Drag-to-Rotate functionality for both mouse and touch
 triangle.addEventListener("mousedown", (e) => {
     if (laserOn) {
-        startDragging(event.clientX, event.clientY);
+        startDragging(e.clientX, e.clientY);
         e.preventDefault(); 
     }
 });
