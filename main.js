@@ -1,4 +1,4 @@
-export let scaling = 0.25;
+export let scaling = 0.26;
 let poster = document.getElementById("poster");
 
 function checkScaling(){
