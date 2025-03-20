@@ -147,24 +147,24 @@ deflectCanvas.height = poster.clientHeight;
 
 
 let red1Source = {
-    x: 178,
-    y: 88
+    x: scaling/0.19*178,
+    y: scaling/0.19*88
 };
 //angle: 55
 let mirror2 = {
-    x: 203,
-    y: 108,
-    r: 40,
+    x: scaling/0.19*203,
+    y: scaling/0.19*108,
+    r: scaling/0.19*40,
     angle: 20,
-    adjustX: 0,
-    adjustY: 20
+    adjustX: scaling/0.19*0,
+    adjustY: scaling/0.19*20
 };
 
 let deflector = {
-    x1: 280,
-    y1: 125,
-    x2: 180,
-    y2: 180
+    x1: scaling/0.19*280,
+    y1: scaling/0.19*125,
+    x2: scaling/0.19*180,
+    y2: scaling/0.19*180
 };
 
 let inputReflectAngle = Math.atan2(mirror2.y - red1Source.y, mirror2.x - red1Source.x) * (180 / Math.PI) + 30;
@@ -175,7 +175,7 @@ let isDragging = false;
 function drawLaser(ctx, x1, y1, x2, y2, color = "red", opacity = 0.8) {
     ctx.globalAlpha = opacity;
     ctx.strokeStyle = color;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = scaling/0.19*3;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
@@ -184,15 +184,15 @@ function drawLaser(ctx, x1, y1, x2, y2, color = "red", opacity = 0.8) {
 
 function drawMirror() {
     reflectCtx.strokeStyle = "white";
-    reflectCtx.lineWidth = 7;
+    reflectCtx.lineWidth = scaling/0.19*7;
 
-    let mirror2X2 = mirror2.x + (mirror2.r - 20) * Math.cos(mirror2.angle * (Math.PI / 180));
-    let mirror2Y2 = mirror2.y + (mirror2.r - 20) * Math.sin(mirror2.angle * (Math.PI / 180));
+    let mirror2X2 = mirror2.x + (mirror2.r - scaling/0.19*20) * Math.cos(mirror2.angle * (Math.PI / 180));
+    let mirror2Y2 = mirror2.y + (mirror2.r - scaling/0.19*20) * Math.sin(mirror2.angle * (Math.PI / 180));
 
     reflectCtx.beginPath();
     reflectCtx.moveTo(
-        mirror2.x - (mirror2.r - 20) * Math.cos(mirror2.angle * (Math.PI / 180)),
-        mirror2.y - (mirror2.r - 20) * Math.sin(mirror2.angle * (Math.PI / 180))
+        mirror2.x - (mirror2.r - scaling/0.19*20) * Math.cos(mirror2.angle * (Math.PI / 180)),
+        mirror2.y - (mirror2.r - scaling/0.19*20) * Math.sin(mirror2.angle * (Math.PI / 180))
     );
     reflectCtx.lineTo(mirror2X2, mirror2Y2);
     reflectCtx.stroke();
@@ -237,8 +237,8 @@ function reflectLaser(ctx, x1, y1, angle, l, color) {
     let incidentAngle = mirror2.angle;
     let reflectionAngle = 2 * incidentAngle - angle;
 
-    let x2 = x1 + l * Math.cos(reflectionAngle * (Math.PI / 180));
-    let y2 = y1 + l * Math.sin(reflectionAngle * (Math.PI / 180));
+    let x2 = x1 + scaling/0.19*l * Math.cos(reflectionAngle * (Math.PI / 180));
+    let y2 = y1 + scaling/0.19*l * Math.sin(reflectionAngle * (Math.PI / 180));
 
     drawLaser(ctx, mirror2.x, mirror2.y, x2, y2, color, 0.8);
     return {
@@ -249,7 +249,7 @@ function reflectLaser(ctx, x1, y1, angle, l, color) {
 }
 
 function deflectLaser(ctx, x, y, angle) {
-    let r = 130;
+    let r = scaling/0.19*130;
     let beams = [];
     for (let i = 14; i < 86; i += 5) {
         let b = {
@@ -304,11 +304,15 @@ let initialAngle = 0;
 let button = document.createElement("div");
 poster.appendChild(button);
 button.classList = "fakeButton";
-button.style.left = `${scaling*631.578947}px`;
+button.style.left = `${scaling*680}px`;
 button.style.top = `${scaling*263.157895}px`;
+button.style.width = `${scaling*50/0.19}px`;
+button.style.height = `${scaling*50/0.19}px`;
 let laserOn = false;
 let cameraInterval1 = null;
+
 button.addEventListener("click", () => {
+    console.log("clicked");
     if (cameraInterval1) return; // Prevent multiple intervals
     uPanels[0].style.opacity = 0;
     // zindex of atom +++++
@@ -541,8 +545,6 @@ function endDragging() {
 
             console.log("locked");
         
-    
-    
             flashingLaser.style.opacity = 1;
             flashingLaser.style.pointerEvents = "auto";
             animateLaser();
@@ -642,7 +644,7 @@ flashingLaser.addEventListener("mouseup", () => {
         let left = flashingLaser.offsetLeft;
         let top = flashingLaser.offsetTop;
         console.log(left, top);
-        if (left < 320 && top > 437) {
+        if (left < scaling/0.19*320 && top > scaling/0.19*437) {
             turnOnTweezer();
         }
     }

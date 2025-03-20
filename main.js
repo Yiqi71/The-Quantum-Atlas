@@ -1,5 +1,20 @@
-export let scaling = 0.19;
+export let scaling = 0.25;
 let poster = document.getElementById("poster");
+
+function checkScaling(){
+    let windowWidth = window.innerWidth;
+    let windowHeight = window.innerHeight;
+    let widthScaling = windowWidth/2546;
+    let heightScaling = windowHeight/3218;
+    if(widthScaling<heightScaling){
+        scaling = widthScaling;
+    }else{
+        scaling = heightScaling;
+    }
+    console.log(scaling);
+}
+checkScaling();
+
 
 //prepare locked panels
 export let uPanels = [];
