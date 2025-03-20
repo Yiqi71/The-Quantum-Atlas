@@ -655,9 +655,9 @@ function dragFlash(e){
     let showPurple = Math.max(0, Math.min(100, ((event.clientY - top) / (bottom - top)) * 100));
     let lowClip = showPurple-10;
     let highClip = showPurple+10
-    // console.log(showPurple);
-
-    p5Pngs[1].style.clipPath = `polygon(${45+highClip/10}% 0, 85% 0, 85% ${highClip}%, 45% ${lowClip}%)`;
+    console.log("showPurple:"+showPurple);
+    console.log("highClip:"+highClip);
+    p5Pngs[1].style.clipPath = `polygon(${-40+showPurple}% 0, ${90-showPurple/8}% 0, 85% ${highClip}%, 45% ${lowClip}%)`;
 }
 
 function stopDragFlash(e){

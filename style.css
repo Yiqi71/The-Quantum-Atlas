@@ -206,7 +206,7 @@ img {
     position:absolute;
     opacity:0;
     z-index: 999;
-    background-color: rgb(224, 176, 255);
+    background-color: rgb(242, 63, 66);
     filter:blur(2px);
     pointer-events: none;
 }
