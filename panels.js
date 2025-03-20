@@ -562,7 +562,7 @@ function endDragging() {
         setTimeout(() => {
             reflectCanvas.style.opacity = "0";
             deflectCanvas.style.opacity = "0";
-            clearInterval(cameraInterval2);
+            
         }, 7000);
     }
 }
@@ -573,7 +573,7 @@ flashingLaser.style.left = `${scaling*396/0.19}px`;
 flashingLaser.style.top = `${scaling*248/0.19}px`;
 flashingLaser.style.width = `${scaling*15/0.19}px`;
 flashingLaser.style.height = `${scaling*15/0.19}px`;
-flashingLaser.style.borderRadius = `${scaling*5/0.19}px`;
+flashingLaser.style.borderRadius = `${scaling*7.5/0.19}px`;
 
 let flashingLaserScale = 1;
 let flashingLaserOpacity = 0;
@@ -604,51 +604,59 @@ function animateLaser() {
 }
 
 // 鼠标按下事件，开始拖动
-flashingLaser.addEventListener("mousedown", (e) => {
+flashingLaser.addEventListener("mousedown", startDragFlash);
+flashingLaser.addEventListener("touchstart", startDragFlash);
+
+flashingLaser.addEventListener("mousemove", dragFlash);
+flashingLaser.addEventListener("touchmove", dragFlash);
+
+flashingLaser.addEventListener("mouseup", stopDragFlash);
+flashingLaser.addEventListener("touchend", stopDragFlash);
+
+function startDragFlash(e){
+    e.preventDefault(); // 防止默认行为，如滚动
     flashingIsDragging = true;
-    flashingStartX = e.clientX;
-    flashingStartY = e.clientY; // 获取鼠标按下时的水平位置
+
+    let event = e.touches ? e.touches[0] : e; // 处理触摸事件
+    flashingStartX = event.clientX;
+    flashingStartY = event.clientY;
     flashingDragStartX = flashingLaser.offsetLeft;
-    flashingDragStartY = flashingLaser.offsetTop; // 获取图片当前的水平位置
-    e.preventDefault(); // 防止选中文本等默认行为
-});
+    flashingDragStartY = flashingLaser.offsetTop;
+}
 
-// 鼠标移动事件，拖动时更新图片位置
-flashingLaser.addEventListener("mousemove", (e) => {
-    if (flashingIsDragging) {
-        // 计算鼠标在水平和垂直方向的移动距离
-        let deltaX = e.clientX - flashingStartX;
-        let deltaY = e.clientY - flashingStartY;
+function dragFlash(e){
+    if (!flashingIsDragging) return;
+    e.preventDefault();
 
-        // 计算新的图片位置
-        let newPositionX = flashingDragStartX + deltaX;
-        let newPositionY = flashingDragStartY + deltaY;
+    let event = e.touches ? e.touches[0] : e; // 处理触摸事件
+    let deltaX = event.clientX - flashingStartX;
+    let deltaY = event.clientY - flashingStartY;
 
-        // 更新图片的位置
-        flashingLaser.style.left = `${newPositionX}px`;
-        flashingLaser.style.top = `${newPositionY}px`;
+    let newPositionX = flashingDragStartX + deltaX;
+    let newPositionY = flashingDragStartY + deltaY;
 
-        // 计算图片的上顶点和下顶点
-        let top = p5Pngs[1].offsetTop;
-        let bottom = top + p5Pngs[1].offsetHeight;
+    flashingLaser.style.left = `${newPositionX}px`;
+    flashingLaser.style.top = `${newPositionY}px`;
 
-        let showPurple = Math.max(0, Math.min(100, ((e.clientY - top) / (bottom - top)) * 100));
-        p5Pngs[1].style.clipPath = `polygon(0 0, 100% 0, 100% ${showPurple}%, 0 ${showPurple}%)`;
+    let top = p5Pngs[1].offsetTop;
+    let bottom = top + p5Pngs[1].offsetHeight;
+
+    let showPurple = Math.max(0, Math.min(100, ((event.clientY - top) / (bottom - top)) * 100));
+    p5Pngs[1].style.clipPath = `polygon(0 0, 100% 0, 100% ${showPurple}%, 0 ${showPurple}%)`;
+}
+
+function stopDragFlash(e){
+    if (!flashingIsDragging) return;
+    flashingIsDragging = false;
+
+    let left = flashingLaser.offsetLeft;
+    let top = flashingLaser.offsetTop;
+    console.log(left, top);
+
+    if (left < scaling / 0.19 * 320 && top > scaling / 0.19 * 437) {
+        turnOnTweezer();
     }
-});
-
-// 鼠标松开事件，停止拖动
-flashingLaser.addEventListener("mouseup", () => {
-    if (flashingIsDragging) {
-        flashingIsDragging = false;
-        let left = flashingLaser.offsetLeft;
-        let top = flashingLaser.offsetTop;
-        console.log(left, top);
-        if (left < scaling/0.19*320 && top > scaling/0.19*437) {
-            turnOnTweezer();
-        }
-    }
-});
+}
 
 
 function turnOnTweezer() {
@@ -659,6 +667,7 @@ function turnOnTweezer() {
     setTimeout(() => {
         uPanels[4].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
         fadeIn(p4Pngs[0], 0.8);
+        clearInterval(cameraInterval2);
     }, 100);
     //     p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)"; // 让图片完全显示
     setTimeout(() => {

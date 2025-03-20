@@ -146,6 +146,8 @@ body {
     /* 确保背景图铺满 */
     background-position: center;
     /* 居中显示 */
+
+    overflow: hidden;
 }
 
 img {
