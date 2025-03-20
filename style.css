@@ -147,7 +147,7 @@ body {
     background-position: center;
     /* 居中显示 */
 
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 img {
@@ -197,6 +197,10 @@ img {
     position: absolute;
     background-color: aqua;
     clip-path: polygon(70% 10%, 0% 80%, 100% 100%);
+}
+#prism{
+    position: absolute;
+    pointer-events: none;
 }
 #flashingLaser{
     position:absolute;

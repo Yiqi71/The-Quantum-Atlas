@@ -89,7 +89,7 @@ p4As.forEach((layer) =>
 );
 
 // 5
-let p5Names = ["purple", "laser", "bed2", "bed1", "atom"];
+let p5Names = ["purple", "red_laser", "bed2", "bed1", "atom"];
 let p5Pngs = [];
 loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs);
 p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
@@ -445,15 +445,26 @@ if (locked == false) {
 
 
 let cameraInterval2 = "null";
+
+// prism
+
+
 let triangle = document.getElementById("triangleContainer");
 triangle.style.left = `${scaling*176/0.19}px`;
 triangle.style.top = `${scaling*76/0.19}px`;
 triangle.style.width = `${scaling*60/0.19}px`;
 triangle.style.height = `${scaling*60/0.19}px`;
 
+let prism = document.getElementById("prism");
+prism.width*= scaling;
+prism.style.zIndex = 10000000;
+prism.style.left = `${scaling*17/0.19}px`;
+prism.style.top = `${scaling*17/0.19}px`;
+
 let triangleShape = document.getElementById("triangle");
 triangleShape.style.width = `${scaling*24/0.19}px`;
 triangleShape.style.height = `${scaling*25/0.19}px`;
+triangleShape.style.opacity = 0;
 
 
 // Drag-to-Rotate functionality for both mouse and touch
@@ -642,7 +653,11 @@ function dragFlash(e){
     let bottom = top + p5Pngs[1].offsetHeight;
 
     let showPurple = Math.max(0, Math.min(100, ((event.clientY - top) / (bottom - top)) * 100));
-    p5Pngs[1].style.clipPath = `polygon(0 0, 100% 0, 100% ${showPurple}%, 0 ${showPurple}%)`;
+    let lowClip = showPurple-10;
+    let highClip = showPurple+10
+    // console.log(showPurple);
+
+    p5Pngs[1].style.clipPath = `polygon(${45+highClip/10}% 0, 85% 0, 85% ${highClip}%, 45% ${lowClip}%)`;
 }
 
 function stopDragFlash(e){
