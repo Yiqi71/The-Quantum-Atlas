@@ -35,13 +35,13 @@ let circleContainer = document.createElement("div");
 circleContainer.style.overflow = "hidden";
 // circleContainer.style.border = "1pt solid black";
 circleContainer.style.position = "absolute";
-circleContainer.style.top = "119px";
-circleContainer.style.left = "367px";
-circleContainer.style.width = "97px";
-circleContainer.style.height = "90px";
+circleContainer.style.top = `${scaling*626.315789}px`;
+circleContainer.style.left = `${scaling*1931.57895}px`;
+circleContainer.style.width = `${scaling*510.526316}px`;
+circleContainer.style.height = `${scaling*473.684211}px`;
 let circles = ["bigger_circle", "smaller_circle"];
-let circleTops = [0, 30];
-let circleLefts = [0, 35];
+let circleTops = [0, `${scaling*157.894737}px`];
+let circleLefts = [0, `${scaling*184.210526}px`];
 let circleScaling = [0.70, 0.6];
 for (let i = 0; i < circles.length; i++) {
     let new_circle = document.createElement("img");
@@ -52,8 +52,8 @@ for (let i = 0; i < circles.length; i++) {
         new_circle.width *= scaling;
         new_circle.width *= circleScaling[i];
     }
-    new_circle.style.left = circleLefts[i] + "px";
-    new_circle.style.top = circleTops[i] + "px";
+    new_circle.style.left = circleLefts[i];
+    new_circle.style.top = circleTops[i];
     circleContainer.appendChild(new_circle);
 }
 panel3.appendChild(circleContainer);
@@ -80,8 +80,10 @@ let circle = document.getElementById("circle");
 let p4ANames = ["atom3", "atom2", "atom1"];
 let p4As = [];
 loadPngs(circle, "panelsImg/panel4/", p4ANames, p4As);
-circle.style.left = "158px";
-circle.style.top = "315px";
+circle.style.left = `${scaling*831.578947}px`;
+circle.style.top = `${scaling*1657.89474}px`;
+circle.style.width = `${scaling*50/0.19}px`;
+circle.style.height = `${scaling*50/0.19}px`
 p4As.forEach((layer) =>
     layer.style.margin = "auto auto"
 );
@@ -93,8 +95,8 @@ loadPngs(document.getElementById("panel5"), `panelsImg/panel5/`, p5Names, p5Pngs
 p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
 
 p5Pngs[1].style.zIndex = "50";
-p5Pngs[4].style.left = "260px";
-p5Pngs[4].style.top = "480px";
+p5Pngs[4].style.left = `${scaling*1368.42105}px`;
+p5Pngs[4].style.top = `${scaling*480/0.19}px`;
 
 // p5Pngs[4].style.opacity = "0";
 // p5Pngs[4].style.zIndex = "50";
@@ -124,7 +126,7 @@ let p8Pngs = [];
 loadPngs(document.getElementById("panel8"), "panelsImg/panel8/", p8PngNames, p8Pngs);
 p8Pngs[1].style.mixBlendMode = "multiply";
 p8Pngs[3].style.mixBlendMode = "color-dodge";
-p8Pngs[0].style.transformOrigin = "23px 565px";
+p8Pngs[0].style.transformOrigin = `${scaling*121.05}px ${scaling*2973.68421}px`;
 p8Pngs[0].style.transform = "scale(0.5)";
 p8Pngs[5].style.zIndex = 40;
 p8Pngs[5].style.mixBlendMode = "lighten";
@@ -302,8 +304,8 @@ let initialAngle = 0;
 let button = document.createElement("div");
 poster.appendChild(button);
 button.classList = "fakeButton";
-button.style.left = "120px";
-button.style.top = "50px";
+button.style.left = `${scaling*631.578947}px`;
+button.style.top = `${scaling*263.157895}px`;
 let laserOn = false;
 let cameraInterval1 = null;
 button.addEventListener("click", () => {
@@ -440,11 +442,21 @@ if (locked == false) {
 
 let cameraInterval2 = "null";
 let triangle = document.getElementById("triangleContainer");
+triangle.style.left = `${scaling*176/0.19}px`;
+triangle.style.top = `${scaling*76/0.19}px`;
+triangle.style.width = `${scaling*60/0.19}px`;
+triangle.style.height = `${scaling*60/0.19}px`;
+
+let triangleShape = document.getElementById("triangle");
+triangleShape.style.width = `${scaling*24/0.19}px`;
+triangleShape.style.height = `${scaling*25/0.19}px`;
+
 
 // Drag-to-Rotate functionality for both mouse and touch
-triangle.addEventListener("mousedown", (event) => {
+triangle.addEventListener("mousedown", (e) => {
     if (laserOn) {
         startDragging(event.clientX, event.clientY);
+        e.preventDefault(); 
     }
 });
 
@@ -555,7 +567,12 @@ function endDragging() {
 
 // purple flashing laser
 let flashingLaser = document.getElementById("flashingLaser");
-//p5Pngs[1].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
+flashingLaser.style.left = `${scaling*396/0.19}px`;
+flashingLaser.style.top = `${scaling*248/0.19}px`;
+flashingLaser.style.width = `${scaling*15/0.19}px`;
+flashingLaser.style.height = `${scaling*15/0.19}px`;
+flashingLaser.style.borderRadius = `${scaling*5/0.19}px`;
+
 let flashingLaserScale = 1;
 let flashingLaserOpacity = 0;
 let flashingLaserGrowing = true; // 控制大小变化
@@ -706,10 +723,10 @@ p6Pngs[3].style.display = "block";
 let camera = document.createElement("div");
 // camera.style.border = "1px solid black";
 camera.style.position = "absolute";
-camera.style.width = "160px";
-camera.style.height = "100px";
-camera.style.left = "300px";
-camera.style.top = "280px";
+camera.style.width = `${scaling*842.105263}px`;
+camera.style.height = `${scaling*526.315789}px`;
+camera.style.left = `${scaling*1578.94737}px`;
+camera.style.top = `${scaling*1473.68421}px`;
 camera.style.zIndex = 100;
 poster.appendChild(camera);
 
