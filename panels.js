@@ -536,8 +536,8 @@ function endDragging() {
         }, 2000);
 
         setTimeout(() => {
-            applyTranslateY(p3Pngs[0], 10, 1.5);
-            applyTranslateY(p3Pngs[1], 10, 1.5);
+            applyTranslateY(p3Pngs[0], 10*scaling/0.19, 1.5);
+            applyTranslateY(p3Pngs[1], 10*scaling/0.19, 1.5);
         }, 3500);
 
         setTimeout(() => {
