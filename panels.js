@@ -8,6 +8,9 @@ import {
 import {
     scaling
 } from './main.js';
+import {
+    uPanelWrappers
+} from './main.js';
 
 let poster = document.getElementById("poster");
 let anchor = poster.getBoundingClientRect();
@@ -312,7 +315,6 @@ let laserOn = false;
 let cameraInterval1 = null;
 
 button.addEventListener("click", () => {
-    console.log("clicked");
     if (cameraInterval1) return; // Prevent multiple intervals
     uPanels[0].style.opacity = 0;
     // zindex of atom +++++
@@ -376,23 +378,55 @@ function moveCircle(r) {
     }
 }
 
-// Efficient Animation Loop
+// Unified Animation Loop
+const rafTasks = new Set();
+let rafId = null;
 let animating = false;
+let rotateCirclesRunning = false;
+let laserPulseRunning = false;
+let tweezerMoveRunning = false;
+let lockSequenceStarted = false;
+
+function startRafLoop() {
+    if (rafId) return;
+    const tick = (time) => {
+        rafTasks.forEach((task) => task(time));
+        rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+}
+
+function addRafTask(task) {
+    rafTasks.add(task);
+    startRafLoop();
+}
+
+function removeRafTask(task) {
+    rafTasks.delete(task);
+    if (rafTasks.size === 0 && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+    }
+}
+
+function startAfterFrame(task) {
+    requestAnimationFrame(() => requestAnimationFrame(task));
+}
 
 function animateCircle() {
     if (!animating) return;
     moveCircle(motIsOn ? 5 : 105);
-    requestAnimationFrame(animateCircle);
 }
 
 function startCircleAnimation() {
     if (animating) return;
     animating = true;
-    animateCircle();
+    addRafTask(animateCircle);
 }
 
 function stopCircleAnimation() {
     animating = false;
+    removeRafTask(animateCircle);
 }
 // Start animation once after a delay
 setTimeout(startCircleAnimation, 500);
@@ -409,11 +443,9 @@ function rotateCircle() {
 
     // 底色
     p4As[0].style.transform = `rotate(${angle4}deg)`;
-
-    requestAnimationFrame(rotateCircle); // Keep rotating
 }
 
-rotateCircle(); // Start the animation
+addRafTask(rotateCircle); // Start the animation
 
 
 // 3
@@ -429,7 +461,18 @@ function rotateCircles() {
     angle += speed;
     document.getElementById("bigger_circle").style.transform = `rotate(${angle}deg)`;
     document.getElementById("smaller_circle").style.transform = `rotate(-${angle}deg)`;
-    requestAnimationFrame(rotateCircles); // Keep rotating
+}
+
+function startRotateCircles() {
+    if (rotateCirclesRunning) return;
+    rotateCirclesRunning = true;
+    addRafTask(rotateCircles);
+}
+
+function stopRotateCircles() {
+    if (!rotateCirclesRunning) return;
+    rotateCirclesRunning = false;
+    removeRafTask(rotateCircles);
 }
 
 
@@ -468,37 +511,74 @@ triangleShape.style.opacity = 0;
 
 
 // Drag-to-Rotate functionality for both mouse and touch
-triangle.addEventListener("mousedown", (e) => {
+triangle.addEventListener("mousedown", handleTriangleMouseDown);
+triangle.addEventListener("mousemove", handleTriangleMouseMove);
+triangle.addEventListener("mouseup", handleTriangleMouseUp);
+triangle.addEventListener("touchstart", handleTriangleTouchStart, { passive: false });
+triangle.addEventListener("touchmove", handleTriangleTouchMove, { passive: false });
+triangle.addEventListener("touchend", handleTriangleTouchEnd);
+
+let triangleDragListenersActive = false;
+
+function addTriangleDragListeners() {
+    if (triangleDragListenersActive) return;
+    triangleDragListenersActive = true;
+    window.addEventListener("mousemove", handleTriangleMouseMove);
+    window.addEventListener("mouseup", handleTriangleMouseUp);
+    window.addEventListener("touchmove", handleTriangleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTriangleTouchEnd);
+    window.addEventListener("touchcancel", handleTriangleTouchEnd);
+}
+
+function removeTriangleDragListeners() {
+    if (!triangleDragListenersActive) return;
+    triangleDragListenersActive = false;
+    window.removeEventListener("mousemove", handleTriangleMouseMove);
+    window.removeEventListener("mouseup", handleTriangleMouseUp);
+    window.removeEventListener("touchmove", handleTriangleTouchMove);
+    window.removeEventListener("touchend", handleTriangleTouchEnd);
+    window.removeEventListener("touchcancel", handleTriangleTouchEnd);
+}
+
+function handleTriangleMouseDown(e) {
     if (laserOn) {
         startDragging(e.clientX, e.clientY);
-        e.preventDefault(); 
+        addTriangleDragListeners();
+        e.preventDefault();
     }
-});
+}
 
-triangle.addEventListener("mousemove", (event) => {
+function handleTriangleMouseMove(event) {
     if (isDragging) {
         updateRotation(event.clientX, event.clientY);
     }
-});
+}
 
-triangle.addEventListener("mouseup", endDragging);
+function handleTriangleMouseUp() {
+    endDragging();
+}
 
-triangle.addEventListener("touchstart", (event) => {
+function handleTriangleTouchStart(event) {
     if (laserOn) {
         event.preventDefault(); // Prevent scrolling
         const touch = event.touches[0];
         startDragging(touch.clientX, touch.clientY);
+        addTriangleDragListeners();
     }
-});
+}
 
-triangle.addEventListener("touchmove", (event) => {
+function handleTriangleTouchMove(event) {
     if (isDragging) {
+        event.preventDefault();
         const touch = event.touches[0];
         updateRotation(touch.clientX, touch.clientY);
     }
-});
+}
 
-triangle.addEventListener("touchend", endDragging);
+function handleTriangleTouchEnd() {
+    endDragging();
+}
+
 
 function startDragging(clientX, clientY) {
     let dx = clientX - mirror2.x + mirror2.adjustX - anchor.left;
@@ -522,8 +602,11 @@ function updateRotation(startX, startY) {
 
 function endDragging() {
     isDragging = false;
+    removeTriangleDragListeners();
 
     if (mirror2.angle > 52 && mirror2.angle < 57) {
+        if (lockSequenceStarted) return;
+        lockSequenceStarted = true;
         uPanels[1].style.opacity = "0";
         uPanels[2].style.opacity = "0";
         uPanels[3].style.opacity = "0";
@@ -532,13 +615,12 @@ function endDragging() {
 
         if (locked) return; // Exit if already locked
 
-        console.log("lockStart");
 
         setTimeout(() => {
             applyTransform(p3Pngs[5], atomDX, atomDY, 3);
             applyTransform(p3Pngs[6], atomDX, atomDY, 3);
             applyScale(p8Pngs[0], 1, 4);
-            rotateCircles();
+            startAfterFrame(startRotateCircles);
         }, 500);
 
         setTimeout(() => {
@@ -554,14 +636,13 @@ function endDragging() {
         setTimeout(() => {
             fadeIn(p8Pngs[5], 0.8);
 
-            console.log("locked");
         
             flashingLaser.style.opacity = 1;
             flashingLaser.style.pointerEvents = "auto";
-            animateLaser();
+            startAfterFrame(startLaserPulse);
      
             p5Pngs[4].style.opacity = "1";
-            tweezerAtomMove();
+            startAfterFrame(startTweezerMove);
             p5Pngs[4].style.zIndex = "50";
 
             // reset 1
@@ -589,13 +670,43 @@ flashingLaser.style.borderRadius = `${scaling*7.5/0.19}px`;
 let flashingLaserScale = 1;
 let flashingLaserOpacity = 0;
 let flashingLaserGrowing = true; // 控制大小变化
-let flashingLaserAnimaId = null;
 
 let flashingIsDragging = false;
 let flashingStartX = 0;
 let flashingDragStartX = 0;
 let flashingStartY = 0;
 let flashingDragStartY = 0;
+
+function warmUpAnimationTargets() {
+    const targets = [
+        flashingLaser,
+        circle,
+        reflectCanvas,
+        deflectCanvas,
+        triangle,
+        p5Pngs[1],
+        p5Pngs[4],
+        p8Pngs[0],
+        p8Pngs[5],
+        uPanelWrappers[4],
+        uPanelWrappers[6],
+        ...p4As
+    ];
+
+    targets.forEach((el) => {
+        if (!el) return;
+        if (!el.style.willChange) {
+            el.style.willChange = "transform, opacity, clip-path";
+        }
+        // Force style calculation once to reduce first-frame spikes.
+        el.getBoundingClientRect();
+        if (el.tagName === "IMG" && el.decode) {
+            el.decode().catch(() => {});
+        }
+    });
+}
+
+window.addEventListener("load", warmUpAnimationTargets);
 
 function animateLaser() {
     if (flashingLaserGrowing) {
@@ -610,23 +721,56 @@ function animateLaser() {
 
     flashingLaser.style.transform = `scale(${flashingLaserScale})`;
     flashingLaser.style.opacity = flashingLaserOpacity;
+}
 
-    flashingLaserAnimaId = requestAnimationFrame(animateLaser); // 递归调用
+function startLaserPulse() {
+    if (laserPulseRunning) return;
+    laserPulseRunning = true;
+    addRafTask(animateLaser);
+}
+
+function stopLaserPulse() {
+    if (!laserPulseRunning) return;
+    laserPulseRunning = false;
+    removeRafTask(animateLaser);
 }
 
 // 鼠标按下事件，开始拖动
 flashingLaser.addEventListener("mousedown", startDragFlash);
-flashingLaser.addEventListener("touchstart", startDragFlash);
+flashingLaser.addEventListener("touchstart", startDragFlash, { passive: false });
 
 flashingLaser.addEventListener("mousemove", dragFlash);
-flashingLaser.addEventListener("touchmove", dragFlash);
+flashingLaser.addEventListener("touchmove", dragFlash, { passive: false });
 
 flashingLaser.addEventListener("mouseup", stopDragFlash);
 flashingLaser.addEventListener("touchend", stopDragFlash);
 
+let flashDragListenersActive = false;
+
+function addFlashDragListeners() {
+    if (flashDragListenersActive) return;
+    flashDragListenersActive = true;
+    window.addEventListener("mousemove", dragFlash);
+    window.addEventListener("mouseup", stopDragFlash);
+    window.addEventListener("touchmove", dragFlash, { passive: false });
+    window.addEventListener("touchend", stopDragFlash);
+    window.addEventListener("touchcancel", stopDragFlash);
+}
+
+function removeFlashDragListeners() {
+    if (!flashDragListenersActive) return;
+    flashDragListenersActive = false;
+    window.removeEventListener("mousemove", dragFlash);
+    window.removeEventListener("mouseup", stopDragFlash);
+    window.removeEventListener("touchmove", dragFlash);
+    window.removeEventListener("touchend", stopDragFlash);
+    window.removeEventListener("touchcancel", stopDragFlash);
+}
+
 function startDragFlash(e){
     e.preventDefault(); // 防止默认行为，如滚动
     flashingIsDragging = true;
+    addFlashDragListeners();
 
     let event = e.touches ? e.touches[0] : e; // 处理触摸事件
     flashingStartX = event.clientX;
@@ -655,18 +799,16 @@ function dragFlash(e){
     let showPurple = Math.max(0, Math.min(100, ((event.clientY - top) / (bottom - top)) * 100));
     let lowClip = showPurple-10;
     let highClip = showPurple+10
-    console.log("showPurple:"+showPurple);
-    console.log("highClip:"+highClip);
     p5Pngs[1].style.clipPath = `polygon(${-40+showPurple}% 0, ${90-showPurple/8}% 0, 85% ${highClip}%, 45% ${lowClip}%)`;
 }
 
 function stopDragFlash(e){
     if (!flashingIsDragging) return;
     flashingIsDragging = false;
+    removeFlashDragListeners();
 
     let left = flashingLaser.offsetLeft;
     let top = flashingLaser.offsetTop;
-    console.log(left, top);
 
     if (left < scaling / 0.19 * 320 && top > scaling / 0.19 * 437) {
         turnOnTweezer();
@@ -675,12 +817,16 @@ function stopDragFlash(e){
 
 
 function turnOnTweezer() {
-    console.log("tweezerOn!");
-    uPanels[4].style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)";
-    uPanels[4].style.transition = "clip-path 2s linear";
+    const panel4Mask = uPanelWrappers[4];
+    if (panel4Mask && panel4Mask.dataset.fullHeight) {
+        panel4Mask.style.height = `${panel4Mask.dataset.fullHeight}px`;
+        panel4Mask.style.transition = "height 2s linear";
+    }
     motIsOn = true;
     setTimeout(() => {
-        uPanels[4].style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
+        if (panel4Mask) {
+            panel4Mask.style.height = "0px";
+        }
         fadeIn(p4Pngs[0], 0.8);
         clearInterval(cameraInterval2);
     }, 100);
@@ -689,12 +835,10 @@ function turnOnTweezer() {
 
 
         flashingLaser.style.opacity = 0;
-        cancelAnimationFrame(flashingLaserAnimaId);
-        flashingLaserAnimaId = null;
+        stopLaserPulse();
         // p5Pngs[4].style.transform = (`translate(${0}px, ${0}px)`);
 
-        cancelAnimationFrame(tweezerAtomMoveAnimaId);
-        tweezerAtomMoveAnimaId = null;
+        stopTweezerMove();
 
         cameraCanOn = true;
     }, 1600);
@@ -758,22 +902,38 @@ poster.appendChild(camera);
 
 
 let cameraHoldStart = 0;
-let titleAnimationFrame;
 let titleProgress = 0;
+let titleAnimating = false;
 const holdDuration = 7000; // 2秒完全消失
 
 function animatePanel() {
+    if (!titleAnimating) return;
     const elapsed = Date.now() - cameraHoldStart;
     titleProgress = Math.min(elapsed / holdDuration, 1);
 
     // 计算剪切蒙版位置，从100%逐渐减少到0%
-    uPanels[6].style.clipPath = `inset( 0% 0% ${ titleProgress * 100}% 0%)`;
-
-    if (titleProgress < 0.4) {
-        titleAnimationFrame = requestAnimationFrame(animatePanel);
-    } else {
-        finishGame = true;
+    const panel6Mask = uPanelWrappers[6];
+    if (panel6Mask && panel6Mask.dataset.fullHeight) {
+        const fullHeight = Number(panel6Mask.dataset.fullHeight);
+        panel6Mask.style.height = `${fullHeight * (1 - titleProgress)}px`;
     }
+
+    if (titleProgress >= 0.4) {
+        finishGame = true;
+        stopTitleAnimation();
+    }
+}
+
+function startTitleAnimation() {
+    if (titleAnimating) return;
+    titleAnimating = true;
+    addRafTask(animatePanel);
+}
+
+function stopTitleAnimation() {
+    if (!titleAnimating) return;
+    titleAnimating = false;
+    removeRafTask(animatePanel);
 }
 
 camera.addEventListener("mousedown", function () {
@@ -781,7 +941,7 @@ camera.addEventListener("mousedown", function () {
         cameraStage = "on";
         checkCamera();
         cameraHoldStart = Date.now();
-        titleAnimationFrame = requestAnimationFrame(animatePanel);
+        startAfterFrame(startTitleAnimation);
     }
 });
 
@@ -789,9 +949,12 @@ camera.addEventListener("mouseup", function () {
     if (cameraStage === "on") {
         cameraStage = "off";
         checkCamera();
-        cancelAnimationFrame(titleAnimationFrame);
+        stopTitleAnimation();
         if (!finishGame) {
-            uPanels[6].style.clipPath = "inset(0% 0% 0% 0%)"; // 重置蒙版
+            const panel6Mask = uPanelWrappers[6];
+            if (panel6Mask && panel6Mask.dataset.fullHeight) {
+                panel6Mask.style.height = `${panel6Mask.dataset.fullHeight}px`;
+            }
         }
 
     }
@@ -805,7 +968,7 @@ camera.addEventListener("touchstart", function (event) {
         cameraStage = "on";
         checkCamera();
         cameraHoldStart = Date.now();
-        titleAnimationFrame = requestAnimationFrame(animatePanel);
+        startAfterFrame(startTitleAnimation);
     }
 });
 
@@ -813,9 +976,12 @@ camera.addEventListener("touchend", function () {
     if (cameraStage === "on") {
         cameraStage = "off";
         checkCamera();
-        cancelAnimationFrame(titleAnimationFrame);
+        stopTitleAnimation();
         if (!finishGame) {
-            uPanels[6].style.clipPath = "inset(0% 0% 0% 0%)"; // 重置蒙版
+            const panel6Mask = uPanelWrappers[6];
+            if (panel6Mask && panel6Mask.dataset.fullHeight) {
+                panel6Mask.style.height = `${panel6Mask.dataset.fullHeight}px`;
+            }
         }
     }
 });
@@ -828,8 +994,6 @@ let centerTX = 0;
 let centerTY = 0;
 let speedTX = 2;
 let speedTY = -3;
-
-let tweezerAtomMoveAnimaId = null;
 
 function tweezerAtomMove() {
     let aX = (centerTX - circleTX) / 240;
@@ -860,7 +1024,6 @@ function tweezerAtomMove() {
     if (speedTY > 0) {
         if (circleTY > boundary[5][1]) {
             speedTY = -3;
-            console.log(circleTY);
         }
         for (let i = boundary.length - 1; i > 1; i--) {
             let y1;
@@ -899,8 +1062,6 @@ function tweezerAtomMove() {
     if (speedTX > 0) {
         if (circleTX > boundary[1][0]) {
             speedTX = -3;
-            // console.log("Jump1");
-            // console.log(circleTX);
         }
     } else {
         if (circleTX < boundary[6][0]) {
@@ -910,9 +1071,18 @@ function tweezerAtomMove() {
     }
     p5Pngs[4].style.transform = `rotate(${angle4}deg)`;
     p5Pngs[4].style.transform = (`translate(${circleTX}px, ${circleTY}px)`);
-    // console.log(circleTX);
-    // console.log(speedTX);
-    tweezerAtomMoveAnimaId = requestAnimationFrame(tweezerAtomMove);
+}
+
+function startTweezerMove() {
+    if (tweezerMoveRunning) return;
+    tweezerMoveRunning = true;
+    addRafTask(tweezerAtomMove);
+}
+
+function stopTweezerMove() {
+    if (!tweezerMoveRunning) return;
+    tweezerMoveRunning = false;
+    removeRafTask(tweezerAtomMove);
 }
 
 function pointToLineDistance(x1, y1, x2, y2, circleTX, circleTY) {
